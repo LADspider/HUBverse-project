@@ -723,10 +723,7 @@
                     const newUserDoc = { name: name, username: email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ''), email: email, avatar: `https://placehold.co/56x56/FFE4E6/DC2626?text=${name.charAt(0).toUpperCase()}`, friends: [], savedPosts: [], likedPosts: [], createdAt: serverTimestamp() };
                     const userDocRef = doc(db, `/artifacts/${appId}/users`, user.uid);
                     await setDoc(userDocRef, newUserDoc);
-                    // Manually set state to avoid race condition before onAuthStateChanged fires
-                    currentUserData = { id: user.uid, ...newUserDoc };
-                    updateUIAfterLogin();
-                    loadDynamicContentForUser();
+                    // onAuthStateChanged will automatically pick up the new user and update the UI.
                     closeModal(document.getElementById('register-modal'));
                     showToast("Đăng ký thành công và đã đăng nhập!");
                 } catch (error) {
@@ -998,6 +995,7 @@
                         if (targetSection) {
                             targetSection.classList.add('active-page');
                         } else {
+                            // Fallback to home if target doesn't exist
                             document.getElementById('hero-section').classList.add('active-page');
                             document.getElementById('features-overview').classList.add('active-page');
                             document.getElementById('team-section').classList.add('active-page');
