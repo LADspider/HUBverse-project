@@ -3,1121 +3,728 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUBverse - Tắt lơ ngơ - Bật HUBverse</title>
+    <title>HUBverse - Hệ sinh thái cho Sinh viên HUB</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap&subset=vietnamese,latin-ext" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* General Body and Font Styles */
         body {
-            font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f7f9fc;
-            color: #333;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #0c1427; /* Dark blue space background */
+            color: #e0e0e0;
         }
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
-        }
-        .hubverse-title, .section-title {
-            font-family: 'Quicksand', 'Helvetica Neue', Arial, sans-serif;
-        }
-
-        /* Hero Section & 3D Canvas - NASA Style */
-        .hero-section {
-            background-color: #000;
-            background-image: url('https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
-            background-size: cover;
-            background-position: center center;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
-            z-index: 1;
-        }
-        #hero-3d-canvas {
+        .hero-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 2; /* Above the background overlay */
+            z-index: 1;
         }
         .hero-content {
             position: relative;
-            z-index: 3; /* Above the canvas and overlay */
+            z-index: 2;
         }
-        .hero-content h1, .hero-content p {
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
-        }
-
-        /* Navigation */
         .nav-link {
-            font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
-            font-weight: 500;
-            color: #4a5568;
-            transition: color 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.5rem;
-        }
-        .nav-link:hover, .nav-link.active-nav-link {
-            color: #0077b6;
-            background-color: #e0f7fa;
-            transform: translateY(-2px);
-        }
-
-        /* Buttons */
-        .btn-login {
-            font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
-            background-color: #00b4d8;
-            color: white;
-            font-weight: 600;
-            padding: 0.6rem 1.2rem;
-            border-radius: 0.75rem;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 180, 216, 0.3);
-        }
-        .btn-login:hover {
-            background-color: #0096c7;
-            box-shadow: 0 6px 15px rgba(0, 180, 216, 0.4);
-        }
-        .btn-cta {
-            font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
-            background-color: #fb8500;
-            color: white;
-            font-weight: 600;
-            padding: 0.75rem 2rem;
-            border-radius: 50px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        .btn-cta:hover {
-            background-color: #e07a00;
-            transform: scale(1.05);
-        }
-        .hero-section .btn-cta {
-            background-color: #ffffff;
-            color: #111827;
-        }
-        .hero-section .btn-cta:hover {
-            background-color: #f0f0f0;
-        }
-        
-        /* Section/Subsection Titles */
-        .section-title {
-            font-weight: 700;
-            color: #023e8a;
-            border-bottom: 3px solid #fb8500;
-        }
-        .subsection-title {
-            font-family: 'Quicksand', 'Helvetica Neue', Arial, sans-serif;
-            font-weight: 600;
-            color: #0077b6;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Cards (Features, Products, etc.) */
-        .feature-card, .product-card, .document-card, .event-card, .post-card, .team-card {
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid #e0e0e0;
-        }
-        .team-card {
-            cursor: pointer;
-        }
-        .feature-card:hover, .product-card:hover, .document-card:hover, .event-card:hover, .post-card:hover, .team-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-        }
-        .feature-card .icon-bg {
-            width: 4rem; height: 4rem; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 1.5rem; font-size: 1.75rem;
-            transition: transform 0.3s ease;
-        }
-        .feature-card:hover .icon-bg {
-            transform: rotate(15deg) scale(1.1);
-        }
-        .icon-bg-marketplace { background-color: #ffedd5; color: #f97316; }
-        .icon-bg-library { background-color: #dcfce7; color: #22c55e; }
-        .icon-bg-news { background-color: #fef9c3; color: #eab308; }
-        .icon-bg-ai { background-color: #ede9fe; color: #8b5cf6; }
-        .icon-bg-social { background-color: #ffe4e6; color: #f43f5e; }
-
-        /* Team Section Styles */
-        #team-section {
-            background: #000000;
             position: relative;
-            overflow: hidden;
-        }
-        .team-section-content {
-            position: relative;
-            z-index: 2;
-        }
-        #team-3d-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-        .team-card {
-            background-color: rgba(30, 41, 59, 0.8); /* Darker card background with transparency */
-            border: 1px solid #334155;
-            text-align: center;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(5px);
-        }
-        .team-card:hover .team-avatar-container::before {
-             animation: spin 6s linear infinite;
-        }
-        .team-avatar-container {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 1.5rem auto;
-        }
-        .team-avatar-container::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 120%;
-            height: 120%;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            opacity: 0.6;
-            transition: opacity 0.4s ease;
-        }
-        .team-avatar {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #f8fafc;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-            position: relative;
-            z-index: 2;
-        }
-        
-        /* Unique planet glows */
-        #team-hoai .team-avatar-container::before { background: radial-gradient(circle, #f43f5e, transparent 70%); }
-        #team-duyen .team-avatar-container::before { background: radial-gradient(circle, #38bdf8, transparent 70%); }
-        #team-ngan .team-avatar-container::before { background: radial-gradient(circle, #4ade80, transparent 70%); } /* Green for Web Ops */
-        #team-tran .team-avatar-container::before { background: radial-gradient(circle, #facc15, transparent 70%); } /* Yellow for Design */
-        #team-huong .team-avatar-container::before { background: radial-gradient(circle, #a78bfa, transparent 70%); }
-
-        .team-name {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #f1f5f9;
-            margin-bottom: 0.25rem;
-        }
-        .team-role {
-            font-size: 0.9rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        /* Role-specific colors */
-        #team-hoai .team-role { color: #fb7185; } /* Rose */
-        #team-duyen .team-role { color: #60a5fa; } /* Blue */
-        #team-tran .team-role { color: #fde047; } /* Yellow for Design */
-        #team-ngan .team-role { color: #4ade80; } /* Green for Web Ops */
-        #team-huong .team-role { color: #c4b5fd; } /* Violet */
-
-        @keyframes spin {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-
-        /* Footer */
-        .footer {
-            background-color: #003554;
-            color: #ade8f4;
-        }
-        .footer a {
-            color: #caf0f8;
             transition: color 0.3s ease;
         }
-        .footer a:hover {
+        .nav-link.active {
+            color: #38bdf8; /* Light blue for active link */
+        }
+        .nav-link:not(.active):hover {
             color: #ffffff;
         }
-        .footer .social-icon {
-            transition: transform 0.3s ease;
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #38bdf8;
+            transition: width 0.3s ease;
         }
-        .footer .social-icon:hover {
-            transform: scale(1.2);
+        .nav-link.active::after,
+        .nav-link:hover::after {
+            width: 100%;
         }
-
-        /* Marketplace & Library Filtering Tabs */
-        .filter-tab-container {
-            display: flex; flex-wrap: wrap; gap: 0.5rem;
+        .card {
+            background-color: rgba(18, 27, 51, 0.6); /* Semi-transparent card background */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .filter-tab-item {
-            padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; cursor: pointer;
-            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(56, 189, 248, 0.2);
         }
-        .library-tab { border: 1px solid #22d3ee; color: #0891b2; background-color: #cffafe; }
-        .library-tab:hover, .library-tab.active-tab { background-color: #22d3ee; color: #0e7490; border-color: #06b6d4; }
-        .marketplace-tab { border: 1px solid #fbbf24; color: #b45309; background-color: #fef3c7; }
-        .marketplace-tab:hover, .marketplace-tab.active-tab { background-color: #fbbf24; color: #78350f; border-color: #f59e0b; }
-        
-        /* News & Events Tabs */
-        .news-events-tabs-menu {
-            display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem;
-            padding-bottom: 1rem; border-bottom: 2px solid #e5e7eb;
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
         }
-        .news-event-tab-button {
-            padding: 0.625rem 1.25rem; font-weight: 500; color: #4b5563;
-            background-color: #f3f4f6; border-radius: 0.5rem; cursor: pointer;
-            transition: all 0.2s ease-in-out; border: 1px solid transparent;
+        .letter-content {
+            background: url('https://www.transparenttextures.com/patterns/stardust.png'), linear-gradient(135deg, #1e3a8a, #0c1427);
+            border: 1px solid #38bdf8;
         }
-        .news-event-tab-button:hover { background-color: #e5e7eb; color: #1f2937; }
-        .news-event-tab-button.active-news-tab {
-            background-color: #fbbf24; color: #78350f; font-weight: 600; border-color: #f59e0b;
-        }
-        .news-event-content-pane { display: none; padding-top: 1rem; }
-        .news-event-content-pane.active { display: block; }
-        
-        /* AI Chatbot */
-        .gemini-chat-container { background-color: #fff; border-radius: 1rem; box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 2px 3px rgba(0,0,0,.1),0 4px 12px rgba(0,0,0,.1); padding: 1.5rem; max-width: 800px; margin: auto; }
-        .gemini-chat-messages { height: 450px; overflow-y: auto; padding: 1rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 1rem; }
-        .gemini-chat-bubble { display: flex; gap: 0.75rem; align-items: flex-start; max-width: 90%; }
-        .gemini-chat-bubble .avatar { width: 2.25rem; height: 2.25rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; flex-shrink: 0; }
-        .gemini-chat-bubble .avatar-user { background-color: #cce7ff; color: #00529b; }
-        .gemini-chat-bubble .avatar-ai { background-color: #d1fae5; color: #065f46; }
-        .gemini-chat-bubble .message-content { background-color: #f3f4f6; padding: 0.75rem 1rem; border-radius: 0.75rem; line-height: 1.6; font-size: 0.95rem; word-break: break-word; }
-        .gemini-chat-bubble.user { margin-left: auto; flex-direction: row-reverse; }
-        .gemini-chat-bubble.user .message-content { background-color: #e0f2fe; border-top-right-radius: 0.25rem; border-top-left-radius: 0.75rem; }
-        .gemini-chat-bubble.ai .message-content { border-top-left-radius: 0.25rem; }
-        .gemini-chat-input-area { display: flex; gap: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e5e7eb; }
-        .gemini-chat-input { flex-grow: 1; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem; }
-        .gemini-chat-input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); }
-        .gemini-send-button { background-color: #2563eb; color: white; padding: 0.75rem 1.25rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: background-color 0.2s; }
-        .gemini-send-button:hover { background-color: #1d4ed8; }
-        #ai-question-limit { font-size: 0.8rem; text-align: center; color: #6b7280; padding-bottom: 0.75rem; }
-
-        /* Social Networking */
-        .insta-post-card { background-color: #fff; border: 1px solid #dbdbdb; border-radius: 8px; margin-bottom: 1.5rem; }
-        .insta-post-header .avatar { width: 2.5rem; height: 2.5rem; border-radius: 50%; margin-right: 0.75rem; border: 2px solid transparent; background: linear-gradient(white, white) padding-box, linear-gradient(to right, #f9ce34, #ee2a7b, #6228d7) border-box; }
-        .line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
-        
-        /* Social Sidebar & Chat */
-        .sidebar-tab { width: 100%; text-align: center; padding: 0.5rem; font-weight: 500; font-size: 0.875rem; color: #4b5563; border-radius: 0.375rem; transition: all 0.2s; }
-        .sidebar-tab:hover { background-color: #f3f4f6; }
-        .sidebar-tab.active-sidebar-tab { background-color: #ec4899; color: white; }
-        .sidebar-tab-pane { display: none; }
-        .sidebar-tab-pane.active-sidebar-pane { display: block; }
-        .friend-item .online-status { width: 0.6rem; height: 0.6rem; border-radius: 50%; background-color: #9ca3af; border: 2px solid white; }
-        .friend-item .online-status.online { background-color: #22c55e; }
-
-        #chat-boxes-container { pointer-events: none; }
-        .chat-box { pointer-events: auto; width: 320px; background-color: white; border-radius: 0.75rem 0.75rem 0 0; box-shadow: 0 0 20px rgba(0,0,0,0.15); display: flex; flex-direction: column; height: 400px; transition: height 0.2s; }
-        .chat-box.minimized { height: 48px; overflow: hidden; }
-        .chat-box-header { display: flex; align-items: center; padding: 0.75rem; background-color: #ec4899; color: white; border-radius: 0.75rem 0.75rem 0 0; cursor: pointer; }
-        .chat-box-body { flex-grow: 1; padding: 0.75rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; }
-        .chat-box-bubble { max-width: 80%; padding: 0.5rem 0.75rem; border-radius: 1rem; }
-        .chat-box-bubble.sent { background-color: #e0f2fe; align-self: flex-end; border-bottom-right-radius: 0.25rem; }
-        .chat-box-bubble.received { background-color: #f3f4f6; align-self: flex-start; border-bottom-left-radius: 0.25rem; }
-        .chat-box-footer { padding: 0.75rem; border-top: 1px solid #e5e7eb; display: flex; gap: 0.5rem; }
-        .chat-box-footer input { flex-grow: 1; border: 1px solid #d1d5db; padding: 0.5rem; border-radius: 9999px; }
-
-
-        /* Modal & Notification */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background-color: white; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 500px; position: relative; }
-        .modal-close-btn { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: #6b7280; cursor: pointer; }
-        .form-input { width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.5rem; margin-bottom: 1rem; font-size: 0.9rem; }
-        .form-button { width: 100%; padding: 0.75rem; background-color: #00b4d8; color: white; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease; }
-        .notification-toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #2d3748; color: white; padding: 12px 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; }
-        .notification-toast.show { opacity: 1; visibility: visible; transform: translate(-50%, -10px); }
-        
-        /* Team Letter Modal */
-        #team-letter-modal .modal-content { max-width: 600px; background: #fffcf2; }
-        #team-letter-modal .letter-header { display: flex; align-items: center; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #ccc; }
-        #team-letter-modal .letter-header img { width: 80px; height: 80px; }
-        #team-letter-modal .letter-header h3 { font-size: 1.75rem; color: #333; }
-        #team-letter-modal .letter-body { font-family: 'Quicksand', sans-serif; font-size: 1.1rem; }
-
-        /* Page simulation */
-        .page-content-section { display: none; }
-        .page-content-section.active-page { display: block; }
     </style>
 </head>
-<body class="text-gray-700">
+<body class="antialiased">
 
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <a href="#" class="text-4xl hubverse-title page-router-link" data-target-page="home">HUBverse</a>
-            <nav class="hidden md:flex space-x-1 items-center">
-                <a href="#" data-target-page="home" class="nav-link page-router-link active-nav-link">Tổng Quan</a>
-                <a href="#" data-target-page="marketplace" class="nav-link page-router-link">Pass Tài Liệu</a>
-                <a href="#" data-target-page="digital-library" class="nav-link page-router-link">Thư Viện Số</a>
-                <a href="#" data-target-page="news-events" class="nav-link page-router-link">Tin Tức</a>
-                <a href="#" data-target-page="ai-chatbot" class="nav-link page-router-link">AI Chat</a>
-                <a href="#" data-target-page="social-networking" class="nav-link page-router-link">Kết Nối</a>
-            </nav>
-            <div id="auth-container"><button id="open-login-modal-btn" class="btn-login">Đăng Nhập</button></div>
+    <!-- Header -->
+    <header class="bg-slate-900/50 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-white tracking-wider">
+                <span class="text-sky-400">HUB</span>verse
+            </a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#" class="nav-link active" data-target="home">Trang Chủ</a>
+                <a href="#" class="nav-link" data-target="market">Pass Tài Liệu</a>
+                <a href="#" class="nav-link" data-target="library">Thư Viện Số</a>
+                <a href="#" class="nav-link" data-target="news">Tin Tức</a>
+                <a href="#" class="nav-link" data-target="ai-chat">AI Chat</a>
+                <a href="#" class="nav-link" data-target="social">Kết Nối</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="px-4 py-2 text-sm font-medium text-white bg-sky-500/20 border border-sky-500 rounded-lg hover:bg-sky-500/40 transition-colors">Đăng nhập</button>
+                 <button class="md:hidden" id="mobile-menu-button">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
+             <a href="#" class="block py-2 nav-link active" data-target="home">Trang Chủ</a>
+             <a href="#" class="block py-2 nav-link" data-target="market">Pass Tài Liệu</a>
+             <a href="#" class="block py-2 nav-link" data-target="library">Thư Viện Số</a>
+             <a href="#" class="block py-2 nav-link" data-target="news">Tin Tức</a>
+             <a href="#" class="block py-2 nav-link" data-target="ai-chat">AI Chat</a>
+             <a href="#" class="block py-2 nav-link" data-target="social">Kết Nối</a>
         </div>
     </header>
 
-    <main id="main-content-area">
-        <!-- HOME PAGE (HERO + FEATURES) -->
-        <section id="hero-section" class="hero-section text-white py-24 md:py-40 page-content-section active-page">
-            <div class="hero-content container mx-auto px-6 text-center">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6">HUBverse</h1>
-                <p class="text-lg md:text-2xl mb-10 max-w-2xl mx-auto leading-relaxed">Tắt lơ ngơ, bật HUBverse</p>
-                <a href="#features-overview" id="explore-now-btn" class="btn-cta text-lg">Khám Phá Ngay <i class="fas fa-rocket ml-2"></i></a>
+    <main class="container mx-auto px-6 py-8 md:py-16">
+        <!-- Section: Home -->
+        <section id="home" class="page-content">
+            <!-- Hero Section -->
+            <div class="relative h-[60vh] md:h-[80vh] flex items-center justify-center text-center rounded-2xl overflow-hidden -mt-16">
+                <canvas class="hero-canvas"></canvas>
+                <div class="hero-content max-w-3xl">
+                    <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight">Tắt lơ ngơ - <span class="text-sky-400">Bật HUBverse</span></h1>
+                    <p class="mt-4 text-lg md:text-xl text-slate-300">Hệ sinh thái toàn diện dành cho sinh viên Đại học Ngân hàng TP.HCM, nơi mọi kết nối và tri thức đều nằm trong tầm tay bạn.</p>
+                    <button class="mt-8 px-8 py-3 bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-600 transition-all transform hover:scale-105">Khám Phá Ngay</button>
+                </div>
             </div>
-            <canvas id="hero-3d-canvas"></canvas>
-        </section>
 
-        <section id="features-overview" class="py-16 md:py-24 page-content-section active-page">
-            <div class="container mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-6 section-title">Những Điều Tuyệt Vời Chờ Đón Bạn</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-                    <div class="feature-card p-8 text-center"><div class="icon-bg icon-bg-marketplace mx-auto"> <i class="fas fa-store"></i> </div><h3 class="text-2xl font-semibold mb-3">Chợ Sinh Viên HUB</h3><p>Mua bán, trao đổi tài liệu, đồ dùng học tập dễ dàng, tiện lợi.</p><a href="#" data-target-page="marketplace" class="font-semibold text-orange-500 hover:text-orange-600 page-router-link">Vào Chợ Ngay <i class="fas fa-arrow-right ml-1"></i></a></div>
-                    <div class="feature-card p-8 text-center"><div class="icon-bg icon-bg-library mx-auto"> <i class="fas fa-book-open"></i> </div><h3 class="text-2xl font-semibold mb-3">Thư Viện Tri Thức</h3><p>Kho tài liệu số phong phú, chính thống từ nhà trường và cộng đồng.</p><a href="#" data-target-page="digital-library" class="font-semibold text-green-500 hover:text-green-600 page-router-link">Khám Phá Thư Viện <i class="fas fa-arrow-right ml-1"></i></a></div>
-                    <div class="feature-card p-8 text-center"><div class="icon-bg icon-bg-news mx-auto"> <i class="fas fa-bullhorn"></i> </div><h3 class="text-2xl font-semibold mb-3">HUB News & Events</h3><p>Không bỏ lỡ bất kỳ tin tức, sự kiện nóng hổi nào của trường.</p><a href="#" data-target-page="news-events" class="font-semibold text-yellow-500 hover:text-yellow-600 page-router-link">Xem Tin Mới <i class="fas fa-arrow-right ml-1"></i></a></div>
-                    <div class="feature-card p-8 text-center"><div class="icon-bg icon-bg-ai mx-auto"> <i class="fas fa-robot"></i> </div><h3 class="text-2xl font-semibold mb-3">Trợ Lý AI 24/7</h3><p>Giải đáp mọi thắc mắc học tập, thủ tục nhanh chóng, mọi lúc mọi nơi.</p><a href="#" data-target-page="ai-chatbot" class="font-semibold text-purple-500 hover:text-purple-600 page-router-link">Hỏi AI Ngay <i class="fas fa-arrow-right ml-1"></i></a></div>
-                    <div class="feature-card p-8 text-center"><div class="icon-bg icon-bg-social mx-auto"> <i class="fas fa-users"></i> </div><h3 class="text-2xl font-semibold mb-3">HUB Connection</h3><p>Kết nối bạn bè, chia sẻ khoảnh khắc, xây dựng cộng đồng HUBers.</p><a href="#" data-target-page="social-networking" class="font-semibold text-rose-500 hover:text-rose-600 page-router-link">Tham Gia Cộng Đồng <i class="fas fa-arrow-right ml-1"></i></a></div>
-                    <div class="feature-card p-8 text-center bg-gray-100 border-dashed"><div class="icon-bg bg-gray-200 text-gray-500 mx-auto"> <i class="fas fa-puzzle-piece"></i> </div><h3 class="text-2xl font-semibold mb-3 text-gray-700">Tính Năng Sắp Ra Mắt</h3><p class="text-gray-500">Nhiều điều thú vị khác đang được HUBverse phát triển!</p><span class="font-semibold text-gray-400">Coming Soon...</span></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TEAM SECTION -->
-        <section id="team-section" class="py-16 md:py-24 page-content-section active-page">
-            <div class="team-section-content container mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-6 section-title text-white" style="border-color: #38bdf8;">Phi Hành Đoàn HUBverse</h2>
-                <p class="text-center text-slate-300 mb-12 md:mb-20 max-w-2xl mx-auto text-lg">Chúng mình là những sinh viên HUB bình thường, với một ước mơ không-bình-thường: tạo ra một không gian số 'của nhà trồng được' dành riêng cho cộng đồng HUBers. Mỗi thành viên là một mảnh ghép, cùng nhau chèo lái con tàu HUBverse với một chút code, một chút sáng tạo và rất nhiều đam mê. Hãy làm quen với tụi mình nhé!</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-20">
-                    <div id="team-hoai" class="team-card" data-name="Lê Hồng Hoài" data-role="COO" data-color="#fb7185" data-avatar="https://placehold.co/150x150/fecaca/991b1b?text=H" data-message="Coucou, mình là Hồng Hoài – một sinh viên năm 2 ngành Kinh doanh số tại Trường Đại học Ngân hàng TP.HCM, đồng thời là COO của “chiếc web” thú vị này . Là một người luôn khao khát phát triển bản thân và yêu thích việc học hỏi, mình đặc biệt quan tâm đến việc làm sao để các bạn sinh viên có thể tiếp cận kiến thức một cách dễ dàng, hiệu quả và kết nối với nhau nhiều hơn trong khoảng thời gian đại học quý giá này!<br><br>Xuất phát từ chính nhu cầu thực tế khi đi học – khi việc tìm kiếm tài liệu học tập, chia sẻ kinh nghiệm hay kết nối với bạn bè trong trường còn khá rời rạc và thiếu hệ thống – mình đã cùng một số bạn xây dựng HUBverse một trang web hỗ trợ sinh viên Ngân hàng dễ dàng tiếp cận với tài liệu học tập, chia sẻ thông tin và tạo nên một cộng đồng sinh viên năng động, gắn kết hơn."><div class="team-avatar-container"><img src="https://placehold.co/150x150/fecaca/991b1b?text=H" alt="Lê Hồng Hoài" class="team-avatar"></div><h3 class="team-name">Lê Hồng Hoài</h3><p class="team-role">COO</p></div>
-                    <div id="team-duyen" class="team-card" data-name="Đỗ Trần Mỹ Duyên" data-role="Head of Marketing" data-color="#60a5fa" data-avatar="https://placehold.co/150x150/bae6fd/0c4a6e?text=D" data-message="Hii, mình là Đỗ Trần Mỹ Duyên – sinh viên năm 2 ngành Kinh tế và Kinh doanh số tại Đại học Ngân hàng TP.HCM, hiện giữ vai trò Head of Marketing tại HUBverse.<br><br>Marketing chọn mình vì mình không thể ngồi yên khi thấy một ý tưởng hay chưa được kể đúng cách, và càng không thể làm ngơ trước cộng đồng sinh viên còn thiếu sự kết nối. Đó cũng là lý do mình đồng hành cùng HUBverse – một “vũ trụ sinh viên” giúp sinh viên HUB dễ dàng tìm tài liệu, kết nối bạn bè trong một hệ sinh thái gần gũi và chuẩn Gen Z.<br><br>Trong vai trò hiện tại, mình không chỉ làm truyền thông hay nội dung, mà là người kể câu chuyện của HUBverse – đưa những tiện ích nhỏ bé đến gần hơn với từng bạn sinh viên, bằng sự chỉn chu, sáng tạo và chất riêng.<br><br>HUBverse là nơi mình phát triển, trưởng thành và sống đúng với đam mê. Hành trình còn dài, và mình mong được gặp các bạn ở những chiến dịch bùng nổ tiếp theo!"><div class="team-avatar-container"><img src="https://placehold.co/150x150/bae6fd/0c4a6e?text=D" alt="Đỗ Trần Mỹ Duyên" class="team-avatar"></div><h3 class="team-name">Đỗ Trần Mỹ Duyên</h3><p class="team-role">Head of Marketing</p></div>
-                    <div id="team-ngan" class="team-card" data-name="Trần Thiên Ngân" data-role="Web Operations Manager" data-color="#4ade80" data-avatar="https://placehold.co/150x150/fef08a/854d0e?text=N" data-message="🎧 Chào bạn, mình là Ngân – người đứng sau những dòng code, tính năng và... vài lần web “chập chờn” của HUBverse.<br><br>Mình không phải siêu nhân công nghệ, mình là một người sinh viên như bạn – cũng từng loay hoay giữa việc học, làm, deadline, và cảm giác lạc lõng giữa một trường đại học đông người.<br><br>Thế nên mình (và cả team nữa) đã tạo ra HUBverse – không phải là một website cho vui, mà là một nơi để bạn có thể tìm thấy một góc nhỏ cho chính mình giữa không gian số của Đại học Ngân Hàng. Mình biết, web không hoàn hảo. Có lúc nó sẽ chậm, có khi nút bấm không nghe lời. Nhưng mình hứa là từng dòng code mình viết, từng tính năng được thêm vào – đều là để bạn có một nơi phù hợp thuộc về mình, vừa giúp bạn sáng tạo, phát triển lại vừa mở rộng thêm &quot;safe zone&quot; của chính mình, kết nối với nhiều HUBers khác. <br><br>Cảm ơn vì bạn đã ở đây. Bây giờ thì...<br>Đăng nhập đi, vũ trụ đang chờ bạn làm điều gì đó hay ho!"><div class="team-avatar-container"><img src="https://placehold.co/150x150/fef08a/854d0e?text=N" alt="Trần Thiên Ngân" class="team-avatar"></div><h3 class="team-name">Trần Thiên Ngân</h3><p class="team-role">Web Operations Manager</p></div>
-                    <div id="team-tran" class="team-card" data-name="Nguyễn Thị Bảo Trân" data-role="Creative Design Director" data-color="#fde047" data-avatar="https://placehold.co/150x150/bbf7d0/14532d?text=T" data-message="Dear loverss,<br>Mình là Bảo Trân Nguyễn, vừa lên chức Creative Design Director – người đứng sau những ý tưởng thị giác và trải nghiệm sáng tạo của trang web học tập dành cho trường mình.<br><br>Trang web này được bọn mình xây dựng với 4 trụ cột chính: Tài liệu học tập; AI chat box; Hoạt động ngoại khóa và Kết bạn bốn phương.<br>Bọn mình tin rằng: Clarity is Power – sự rõ ràng là sức mạnh, không lo lơ ngơ vì đã có Hubverse.<br><br>A little bit about me: Mê thiên nhiên, động vật và những điều giản dị. Mình thích chạy nhảy, đôi lúc năng lượng hơi cao Và mình thích single vì chưa eo ai hẹ hẹ.<br><br>Rất vui được đồng hành cùng các bạn trên hành trình học tập đầy cảm hứng này!<br>Cheers!"><div class="team-avatar-container"><img src="https://placehold.co/150x150/bbf7d0/14532d?text=T" alt="Nguyễn Thị Bảo Trân" class="team-avatar"></div><h3 class="team-name">Nguyễn Thị Bảo Trân</h3><p class="team-role">Creative Design Director</p></div>
-                    <div id="team-huong" class="team-card" data-name="Nguyễn Thị Kim Hường" data-role="Content Strategist" data-color="#c4b5fd" data-avatar="https://placehold.co/150x150/ddd6fe/5b21b6?text=H" data-message="Chào bạn, mình là Hường - cô gái chuyên “dệt mộng” giữa thế giới kinh tế số!<br><br>Tên đầy đủ là Nguyễn Thị Kim Hường, sinh viên năm hai ngành Kinh tế Quốc tế của Trường Đại học Ngân hàng TP.HCM. Nhưng nếu bạn hỏi mình là ai, mình sẽ nói: “Mình là người đã biến những ngày chật vật năm nhất thành động lực để tạo ra điều gì đó có ích cho cả một cộng đồng sinh viên.”<br><br>Ngày ấy, giữa hàng chồng slide và bài giảng tưởng chừng không bao giờ hết, mình nhận ra không chỉ riêng mình cảm thấy bối rối. Thế là HUBver ra đời – một góc nhỏ trên mạng, nơi mình đóng vai content strategist, vừa chia sẻ kinh nghiệm học tập, vừa truyền cảm hứng cho những ai đang loay hoay với hành trình đại học.<br><br>Mình tin rằng học tập không chỉ là chinh phục kiến thức, mà còn là hành trình tìm thấy chính mình, theo cách thật riêng và đầy cảm hứng."><div class="team-avatar-container"><img src="https://placehold.co/150x150/ddd6fe/5b21b6?text=H" alt="Nguyễn Thị Kim Hường" class="team-avatar"></div><h3 class="team-name">Nguyễn Thị Kim Hường</h3><p class="team-role">Content Strategist</p></div>
-                </div>
-            </div>
-            <canvas id="team-3d-canvas"></canvas>
-        </section>
-
-        <!-- OTHER PAGES (MARKETPLACE, LIBRARY, ETC.) -->
-        <section id="marketplace" class="py-16 md:py-24 bg-orange-50 page-content-section">
-            <div class="container mx-auto px-6">
-                 <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 section-title" style="border-color: #f97316;">Chợ Sinh Viên HUBverse</h2>
-                 <div id="marketplace-filter-tabs" class="filter-tab-container justify-center mb-8">
-                    <button class="filter-tab-item marketplace-tab active-tab" data-filter="all">Tất Cả</button>
-                    <button class="filter-tab-item marketplace-tab" data-filter="sach">Sách & Giáo Trình</button>
-                    <button class="filter-tab-item marketplace-tab" data-filter="dungcu">Dụng Cụ Học Tập</button>
-                    <button class="filter-tab-item marketplace-tab" data-filter="khac">Khác</button>
-                </div>
-                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
-            </div>
-        </section>
-        <section id="digital-library" class="py-16 md:py-24 bg-sky-50 page-content-section">
-            <div class="container mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 section-title" style="border-color: #0ea5e9;">Thư Viện Tri Thức HUB</h2>
-                <div id="library-filter-tabs" class="filter-tab-container justify-center mb-8">
-                     <button class="filter-tab-item library-tab active-tab" data-filter="all">Tất Cả</button>
-                     <button class="filter-tab-item library-tab" data-filter="tcnh">Tài chính - Ngân hàng</button>
-                     <button class="filter-tab-item library-tab" data-filter="ktkt">Kế toán - Kiểm toán</button>
-                     <button class="filter-tab-item library-tab" data-filter="qtkd">Quản trị Kinh doanh</button>
-                     <button class="filter-tab-item library-tab" data-filter="ktqt">Kinh tế Quốc tế</button>
-                     <button class="filter-tab-item library-tab" data-filter="nnanh">Ngôn ngữ Anh</button>
-                     <button class="filter-tab-item library-tab" data-filter="htttql">HTTT Quản lí</button>
-                     <button class="filter-tab-item library-tab" data-filter="luatkt">Luật Kinh tế</button>
-                </div>
-                <div id="document-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
-            </div>
-        </section>
-        <section id="news-events" class="py-16 md:py-24 bg-yellow-50 page-content-section">
-            <div class="container mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 section-title" style="border-color: #f59e0b;">HUB News & Events Feed</h2>
-                <div class="news-events-tabs-menu">
-                    <button class="news-event-tab-button active-news-tab" data-target="su-kien"><i class="fas fa-calendar-check mr-2"></i>Sự Kiện</button>
-                    <button class="news-event-tab-button" data-target="minigames"><i class="fas fa-gamepad mr-2"></i>Minigames</button>
-                    <button class="news-event-tab-button" data-target="tinh-nguyen"><i class="fas fa-hands-helping mr-2"></i>Tình Nguyện</button>
-                    <button class="news-event-tab-button" data-target="hoc-thuat"><i class="fas fa-trophy mr-2"></i>Học Thuật</button>
-                </div>
-                <div id="su-kien" class="news-event-content-pane active">
-                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"><div class="event-card"><img src="https://placehold.co/400x220/FEF3C7/D97706?text=Gala" alt="Gala" class="w-full h-48 object-cover rounded-t-xl"><div class="p-6"><h4 class="text-xl font-semibold mb-2">Gala Chào Tân Sinh Viên</h4><p class="text-gray-600 text-sm mb-3"><i class="fas fa-clock mr-1"></i> 18:00, 28/08</p><p class="text-gray-700 text-sm mb-4 line-clamp-3">Quẩy tung nóc với dàn line-up "cây nhà lá vườn". Vé vào cổng miễn phí nhưng vé gửi xe thì không!</p><a href="#" class="font-semibold text-amber-600">Xem chi tiết <i class="fas fa-arrow-right ml-1"></i></a></div></div><div class="event-card"><img src="https://placehold.co/400x220/FEF3C7/D97706?text=Job+Fair" alt="Job Fair" class="w-full h-48 object-cover rounded-t-xl"><div class="p-6"><h4 class="text-xl font-semibold mb-2">Ngày Hội Việc Làm HUB 2025</h4><p class="text-gray-600 text-sm mb-3"><i class="fas fa-calendar-day mr-1"></i> Cả ngày, 20/07</p><p class="text-gray-700 text-sm mb-4 line-clamp-3">Cơ hội "bán thân" cho các tư bản lớn. Nhớ mang theo nhiều CV và nụ cười thật tươi.</p><a href="#" class="font-semibold text-amber-600">Xem gian hàng <i class="fas fa-arrow-right ml-1"></i></a></div></div></div>
-                </div>
-                <div id="minigames" class="news-event-content-pane"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"><div class="event-card"><img src="https://placehold.co/400x220/FEF3C7/D97706?text=Game" alt="Game" class="w-full h-48 object-cover rounded-t-xl"><div class="p-6"><h4 class="text-xl font-semibold mb-2">Truy Tìm Admin Ẩn Danh</h4><p class="text-gray-600 text-sm mb-3"><i class="fas fa-clock mr-1"></i> Bất cứ khi nào</p><p class="text-gray-700 text-sm mb-4 line-clamp-3">Admin đang ẩn mình trong các bài post. Giải được mật mã, nhận ngay ly trà sữa full topping.</p><a href="#" class="font-semibold text-amber-600">Tham gia ngay <i class="fas fa-arrow-right ml-1"></i></a></div></div></div></div>
-                <div id="tinh-nguyen" class="news-event-content-pane"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"><div class="event-card"><img src="https://placehold.co/400x220/FEF3C7/D97706?text=Volunteer" alt="Volunteer" class="w-full h-48 object-cover rounded-t-xl"><div class="p-6"><h4 class="text-xl font-semibold mb-2">Chủ Nhật Xanh - Dọn Rác</h4><p class="text-gray-600 text-sm mb-3"><i class="fas fa-calendar-alt mr-1"></i> 07:00, Chủ nhật</p><p class="text-gray-700 text-sm mb-4 line-clamp-3">Dọn sạch bờ kênh, nhận điểm rèn luyện và một trái tim trong sạch. Bonus: có thể bạn sẽ tìm thấy "crush".</p><a href="#" class="font-semibold text-amber-600">Đăng ký CTV <i class="fas fa-arrow-right ml-1"></i></a></div></div></div></div>
-                <div id="hoc-thuat" class="news-event-content-pane"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"><div class="event-card"><img src="https://placehold.co/400x220/FEF3C7/D97706?text=Shark+Tank" alt="Shark Tank" class="w-full h-48 object-cover rounded-t-xl"><div class="p-6"><h4 class="text-xl font-semibold mb-2">"Shark Tank" Phiên Bản HUB</h4><p class="text-gray-600 text-sm mb-3"><i class="fas fa-gavel mr-1"></i> Vòng sơ loại: 15/09</p><p class="text-gray-700 text-sm mb-4 line-clamp-3">Ý tưởng của bạn có thể nhận được "deal" từ... quỹ khuyến học của khoa.</p><a href="#" class="font-semibold text-amber-600">Nộp đề án <i class="fas fa-arrow-right ml-1"></i></a></div></div></div></div>
-            </div>
-        </section>
-        <section id="ai-chatbot" class="py-16 md:py-24 bg-gray-100 page-content-section">
-            <div class="container mx-auto px-6">
-                 <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 section-title" style="border-color: #4f46e5;">Trò Chuyện Cùng HUB AI</h2>
-                 <div class="gemini-chat-container">
-                     <div id="gemini-chat-messages" class="gemini-chat-messages"></div>
-                     <div class="mt-4">
-                        <div id="ai-question-limit" class="hidden"><p>Bạn có <strong><span id="question-limit-count">3</span></strong> lượt hỏi thử. <a href="#" id="login-for-more" class="text-indigo-600 font-semibold hover:underline">Đăng nhập</a> để hỏi không giới hạn.</p></div>
-                        <div class="gemini-chat-input-area"><input type="text" id="gemini-chat-input" placeholder="Nhắn tin cho HUB AI..." class="gemini-chat-input"><button id="gemini-send-button" class="gemini-send-button"><i class="fas fa-paper-plane"></i></button></div>
-                     </div>
-                 </div>
-            </div>
-        </section>
-        <section id="social-networking" class="py-16 md:py-24 bg-pink-50 page-content-section">
-            <div class="container mx-auto px-6">
-                <div id="social-guest-view" class="hidden">
-                    <div class="text-center bg-white p-12 rounded-xl shadow-lg">
-                        <i class="fas fa-users-slash text-6xl text-pink-300 mb-4"></i>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Kết Nối Cùng Cộng Đồng HUBverse</h3>
-                        <p class="text-gray-600 mb-6">Đăng nhập để xem bài viết từ bạn bè, chia sẻ khoảnh khắc và nhắn tin nhé!</p>
-                        <button id="login-from-social-prompt" class="btn-login bg-pink-500 hover:bg-pink-600">Đăng Nhập / Đăng Ký</button>
+            <!-- Features Section -->
+            <div class="mt-24">
+                <h2 class="text-3xl font-bold text-center text-white">5 Chức Năng Cốt Lõi</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mt-12">
+                    <div class="card p-6 text-center rounded-xl">
+                        <i data-lucide="shopping-cart" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h3 class="mt-4 text-xl font-semibold text-white">Pass Tài Liệu</h3>
+                        <p class="mt-2 text-sm text-slate-400">Chợ sinh viên thu nhỏ, mua bán giáo trình và vật dụng học tập.</p>
+                    </div>
+                    <div class="card p-6 text-center rounded-xl">
+                        <i data-lucide="library" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h3 class="mt-4 text-xl font-semibold text-white">Thư Viện Số</h3>
+                        <p class="mt-2 text-sm text-slate-400">Kho tài liệu số hóa khổng lồ, phân loại theo từng chuyên ngành.</p>
+                    </div>
+                    <div class="card p-6 text-center rounded-xl">
+                        <i data-lucide="newspaper" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h3 class="mt-4 text-xl font-semibold text-white">Tin Tức & Sự Kiện</h3>
+                        <p class="mt-2 text-sm text-slate-400">Cập nhật nhanh nhất mọi hoạt động, sự kiện từ HUB.</p>
+                    </div>
+                    <div class="card p-6 text-center rounded-xl">
+                        <i data-lucide="bot" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h3 class="mt-4 text-xl font-semibold text-white">AI Chat</h3>
+                        <p class="mt-2 text-sm text-slate-400">Trợ lý ảo thông minh, giải đáp mọi thắc mắc 24/7.</p>
+                    </div>
+                    <div class="card p-6 text-center rounded-xl">
+                        <i data-lucide="users" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h3 class="mt-4 text-xl font-semibold text-white">Kết Nối</h3>
+                        <p class="mt-2 text-sm text-slate-400">Mạng xã hội riêng tư, xây dựng cộng đồng sinh viên HUB.</p>
                     </div>
                 </div>
-                <div id="social-user-view" class="hidden">
-                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 section-title" style="border-color: #ec4899;">HUB Connection</h2>
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                        <aside class="lg:col-span-3 lg:order-1 order-2 space-y-6" id="social-friends-sidebar"></aside>
-                        <div class="lg:col-span-6 lg:order-2 order-1 space-y-6">
-                            <div id="new-post-box" class="bg-white p-4 rounded-lg shadow hidden"></div>
-                            <div id="social-feed-container"></div>
+            </div>
+            
+            <!-- Crew Section -->
+            <div class="mt-24">
+                 <h2 class="text-3xl font-bold text-center text-white">Phi Hành Đoàn <span class="text-sky-400">HUBverse</span></h2>
+                 <p class="text-center mt-2 text-slate-400">Những "phi hành gia" đã xây dựng nên con tàu tri thức này.</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12">
+                    <!-- Crew Member 1 -->
+                    <div class="crew-member text-center group cursor-pointer" data-modal-target="letter1">
+                        <img src="https://placehold.co/300x300/1e293b/94a3b8?text=Phi+Hành+Gia+1" class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-slate-700 group-hover:border-sky-400 transition-all duration-300 transform group-hover:scale-110" alt="Crew Member 1">
+                        <h3 class="mt-4 text-lg font-semibold text-white">Nguyễn Văn A</h3>
+                        <p class="text-sm text-sky-400">Project Manager</p>
+                    </div>
+                    <!-- Crew Member 2 -->
+                     <div class="crew-member text-center group cursor-pointer" data-modal-target="letter2">
+                        <img src="https://placehold.co/300x300/1e293b/94a3b8?text=Phi+Hành+Gia+2" class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-slate-700 group-hover:border-sky-400 transition-all duration-300 transform group-hover:scale-110" alt="Crew Member 2">
+                        <h3 class="mt-4 text-lg font-semibold text-white">Trần Thị B</h3>
+                        <p class="text-sm text-sky-400">Lead Developer</p>
+                    </div>
+                    <!-- Crew Member 3 -->
+                     <div class="crew-member text-center group cursor-pointer" data-modal-target="letter3">
+                        <img src="https://placehold.co/300x300/1e293b/94a3b8?text=Phi+Hành+Gia+3" class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-slate-700 group-hover:border-sky-400 transition-all duration-300 transform group-hover:scale-110" alt="Crew Member 3">
+                        <h3 class="mt-4 text-lg font-semibold text-white">Lê Văn C</h3>
+                        <p class="text-sm text-sky-400">UI/UX Designer</p>
+                    </div>
+                    <!-- Crew Member 4 -->
+                    <div class="crew-member text-center group cursor-pointer" data-modal-target="letter4">
+                        <img src="https://placehold.co/300x300/1e293b/94a3b8?text=Phi+Hành+Gia+4" class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-slate-700 group-hover:border-sky-400 transition-all duration-300 transform group-hover:scale-110" alt="Crew Member 4">
+                        <h3 class="mt-4 text-lg font-semibold text-white">Phạm Thị D</h3>
+                        <p class="text-sm text-sky-400">Marketing Lead</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration CTA Section -->
+            <div class="mt-24 text-center border-t border-slate-800 pt-16">
+                <h2 class="text-3xl font-bold text-white">Sẵn sàng khám phá vũ trụ tri thức?</h2>
+                <p class="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">Tạo tài khoản ngay để mở khóa toàn bộ tính năng, kết nối bạn bè và không bỏ lỡ bất kỳ thông tin quan trọng nào từ HUBverse.</p>
+                <button id="open-register-modal" class="mt-8 px-8 py-3 bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-600 transition-all transform hover:scale-105">Tạo Tài Khoản Miễn Phí</button>
+            </div>
+        </section>
+
+        <!-- Section: Pass Tai Lieu (Market) -->
+        <section id="market" class="page-content hidden">
+            <h2 class="text-3xl font-bold text-white mb-8">Pass Tài Liệu (Chợ Sinh Viên)</h2>
+            <div class="flex flex-wrap gap-4 mb-8" id="product-filters">
+                <button data-category="all" class="filter-btn bg-sky-500 text-white px-4 py-2 rounded-lg">Tất cả</button>
+                <button data-category="book" class="filter-btn bg-slate-700 text-slate-300 px-4 py-2 rounded-lg hover:bg-slate-600">Sách & Giáo trình</button>
+                <button data-category="tool" class="filter-btn bg-slate-700 text-slate-300 px-4 py-2 rounded-lg hover:bg-slate-600">Dụng cụ học tập</button>
+                <button data-category="other" class="filter-btn bg-slate-700 text-slate-300 px-4 py-2 rounded-lg hover:bg-slate-600">Khác</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Product Items -->
+                <div class="card rounded-lg overflow-hidden product-item" data-category="book">
+                    <img src="https://placehold.co/400x300/0c1427/e0e0e0?text=Kinh+tế+học" alt="Kinh tế học" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white">Giáo trình Kinh tế học</h3>
+                        <p class="text-sm text-slate-400 mt-1">Sách & Giáo trình</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-xl font-bold text-sky-400">120.000₫</span>
+                            <button class="text-xs font-semibold bg-sky-500 text-white px-3 py-1 rounded-full hover:bg-sky-600">Thêm vào giỏ</button>
                         </div>
-                        <aside class="lg:col-span-3 lg:order-3 order-3 space-y-6" id="social-profile-sidebar"></aside>
+                    </div>
+                </div>
+                <div class="card rounded-lg overflow-hidden product-item" data-category="tool">
+                    <img src="https://placehold.co/400x300/0c1427/e0e0e0?text=Máy+tính+Casio" alt="Máy tính Casio" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white">Máy tính Casio FX-580VN X</h3>
+                        <p class="text-sm text-slate-400 mt-1">Dụng cụ học tập</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-xl font-bold text-sky-400">550.000₫</span>
+                            <button class="text-xs font-semibold bg-sky-500 text-white px-3 py-1 rounded-full hover:bg-sky-600">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card rounded-lg overflow-hidden product-item" data-category="book">
+                    <img src="https://placehold.co/400x300/0c1427/e0e0e0?text=Triết+học+Mác-Lênin" alt="Triết học Mác-Lênin" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white">Giáo trình Triết học Mác-Lênin</h3>
+                        <p class="text-sm text-slate-400 mt-1">Sách & Giáo trình</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-xl font-bold text-sky-400">85.000₫</span>
+                            <button class="text-xs font-semibold bg-sky-500 text-white px-3 py-1 rounded-full hover:bg-sky-600">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card rounded-lg overflow-hidden product-item" data-category="other">
+                    <img src="https://placehold.co/400x300/0c1427/e0e0e0?text=Vé+Concert" alt="Vé Concert" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white">Vé concert Westlife</h3>
+                        <p class="text-sm text-slate-400 mt-1">Khác</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-xl font-bold text-sky-400">1.500.000₫</span>
+                            <button class="text-xs font-semibold bg-sky-500 text-white px-3 py-1 rounded-full hover:bg-sky-600">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Digital Library -->
+        <section id="library" class="page-content hidden">
+            <h2 class="text-3xl font-bold text-white mb-8">Thư Viện Số</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 <!-- Department Card -->
+                <div class="card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-sky-400">Tài chính - Ngân hàng</h3>
+                    <ul class="mt-4 space-y-2 text-slate-300">
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Bài giảng & Slide</li>
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Đề cương ôn tập</li>
+                        <li class="flex items-center"><i data-lucide="book-open" class="h-4 w-4 mr-2 text-sky-500"></i> Ebook & Giáo trình</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-sky-400">Kế toán - Kiểm toán</h3>
+                    <ul class="mt-4 space-y-2 text-slate-300">
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Nguyên lý kế toán</li>
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Đề thi các năm</li>
+                        <li class="flex items-center"><i data-lucide="users-2" class="h-4 w-4 mr-2 text-sky-500"></i> Bài tập nhóm mẫu</li>
+                    </ul>
+                </div>
+                 <div class="card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-sky-400">Quản trị Kinh doanh</h3>
+                    <ul class="mt-4 space-y-2 text-slate-300">
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Slide Quản trị học</li>
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Case study thực tế</li>
+                        <li class="flex items-center"><i data-lucide="book-open" class="h-4 w-4 mr-2 text-sky-500"></i> Tài liệu tham khảo</li>
+                    </ul>
+                </div>
+                <!-- Add more departments as needed -->
+            </div>
+        </section>
+
+        <!-- Section: News & Events -->
+        <section id="news" class="page-content hidden">
+             <h2 class="text-3xl font-bold text-white mb-8">Tin Tức & Sự Kiện</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- News Column 1 -->
+                <div>
+                    <h3 class="text-2xl font-semibold text-sky-400 mb-4 border-b-2 border-sky-800 pb-2">Sự Kiện Sắp Tới</h3>
+                    <div class="space-y-6">
+                         <!-- Event Item -->
+                        <div class="card p-4 flex space-x-4 rounded-lg">
+                            <div class="flex-shrink-0 text-center bg-slate-700 rounded-md p-2 w-16">
+                                <p class="text-sm font-bold text-white">Thg 7</p>
+                                <p class="text-2xl font-bold text-sky-400">25</p>
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-rose-400 uppercase">Workshop</span>
+                                <h4 class="font-bold text-white">Kỹ năng chinh phục nhà tuyển dụng</h4>
+                                <p class="text-sm text-slate-400">Hội trường lớn - 8:00 AM</p>
+                            </div>
+                        </div>
+                         <!-- Event Item -->
+                        <div class="card p-4 flex space-x-4 rounded-lg">
+                            <div class="flex-shrink-0 text-center bg-slate-700 rounded-md p-2 w-16">
+                                <p class="text-sm font-bold text-white">Thg 8</p>
+                                <p class="text-2xl font-bold text-sky-400">10</p>
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-amber-400 uppercase">Ngày hội việc làm</span>
+                                <h4 class="font-bold text-white">HUB Career Fair 2024</h4>
+                                <p class="text-sm text-slate-400">Sân trường - Cả ngày</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- News Column 2 -->
+                <div>
+                    <h3 class="text-2xl font-semibold text-sky-400 mb-4 border-b-2 border-sky-800 pb-2">Hoạt Động & Cuộc Thi</h3>
+                     <div class="space-y-6">
+                         <!-- Activity Item -->
+                        <div class="card p-4 rounded-lg">
+                            <span class="text-xs font-semibold text-green-400 uppercase">Tình nguyện</span>
+                            <h4 class="font-bold text-white mt-1">Tuyển quân Mùa Hè Xanh 2024</h4>
+                            <p class="text-sm text-slate-400 mt-1">Đăng ký tại văn phòng Đoàn trường trước ngày 30/06.</p>
+                        </div>
+                         <!-- Activity Item -->
+                        <div class="card p-4 rounded-lg">
+                            <span class="text-xs font-semibold text-indigo-400 uppercase">Học thuật</span>
+                            <h4 class="font-bold text-white mt-1">Phát động cuộc thi "Shark Tank HUB"</h4>
+                            <p class="text-sm text-slate-400 mt-1">Cơ hội cho những ý tưởng khởi nghiệp tỏa sáng. Vòng sơ loại bắt đầu!</p>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- Section: AI Chat -->
+        <section id="ai-chat" class="page-content hidden">
+            <h2 class="text-3xl font-bold text-white mb-2 text-center">AI Chat - Trợ lý học tập</h2>
+            <p class="text-center text-slate-400 mb-8">Giải đáp mọi thắc mắc của bạn về HUB</p>
+            
+            <div class="card max-w-2xl mx-auto rounded-lg p-1">
+                 <div class="p-4 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-center text-sm rounded-t-lg">
+                    Bạn chưa đăng nhập. Bạn còn <span class="font-bold">3</span> lượt hỏi thử nghiệm. <a href="#" class="font-bold underline">Đăng nhập</a> để sử dụng không giới hạn.
+                 </div>
+                <div class="p-6 h-[50vh] overflow-y-auto flex flex-col space-y-4">
+                    <!-- Chat messages -->
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-sky-500 p-2 rounded-full flex-shrink-0"><i data-lucide="bot" class="w-5 h-5 text-white"></i></div>
+                        <div class="bg-slate-700 p-3 rounded-lg rounded-tl-none">
+                            <p>Xin chào! Tôi là trợ lý AI của HUBverse. Tôi có thể giúp gì cho bạn?</p>
+                        </div>
+                    </div>
+                     <div class="flex items-start space-x-3 justify-end">
+                        <div class="bg-slate-600 p-3 rounded-lg rounded-tr-none">
+                            <p>Thủ tục xin bảng điểm gồm những gì ạ?</p>
+                        </div>
+                        <div class="bg-indigo-500 p-2 rounded-full flex-shrink-0"><i data-lucide="user" class="w-5 h-5 text-white"></i></div>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-slate-700">
+                    <div class="flex items-center bg-slate-700 rounded-lg">
+                        <input type="text" placeholder="Nhập câu hỏi của bạn..." class="w-full bg-transparent p-3 focus:outline-none text-white">
+                        <button class="p-3 text-sky-400 hover:text-sky-300"><i data-lucide="send" class="w-6 h-6"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Social Network -->
+        <section id="social" class="page-content hidden">
+            <!-- Guest View -->
+            <div id="social-guest-view" class="text-center card max-w-lg mx-auto p-12 rounded-xl">
+                 <i data-lucide="lock" class="mx-auto h-16 w-16 text-sky-400"></i>
+                 <h2 class="text-2xl font-bold mt-4 text-white">Đây là không gian riêng tư</h2>
+                 <p class="text-slate-400 mt-2">Vui lòng đăng nhập hoặc đăng ký để tham gia cộng đồng sinh viên HUB và kết nối với bạn bè.</p>
+                 <div class="mt-6 flex justify-center space-x-4">
+                     <button class="px-6 py-2 bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-600">Đăng Nhập</button>
+                     <button class="px-6 py-2 bg-slate-600 text-white font-semibold rounded-lg hover:bg-slate-500">Đăng Ký</button>
+                 </div>
+                 <p class="text-xs text-slate-500 mt-6">Bạn có thể dùng tài khoản demo để trải nghiệm:<br>
+                 <span class="font-mono">nganana23@gmail.com</span> | Mật khẩu: <span class="font-mono">12345678</span>
+                 </p>
+            </div>
+
+            <!-- Member View (hidden by default, shown after login) -->
+            <div id="social-member-view" class="hidden">
+                <div class="grid grid-cols-12 gap-6">
+                    <!-- Left Sidebar: Friends & Chats -->
+                    <div class="col-span-12 lg:col-span-3">
+                        <div class="card p-4 rounded-lg">
+                            <h3 class="font-semibold text-white mb-4">Tin nhắn</h3>
+                            <div class="space-y-3">
+                                <!-- Chat item -->
+                                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-700/50">
+                                    <img src="https://placehold.co/40x40/64748b/ffffff?text=B" class="w-10 h-10 rounded-full">
+                                    <div>
+                                        <p class="font-semibold text-sm text-white">Minh Tuấn</p>
+                                        <p class="text-xs text-slate-400">Ok, hẹn gặp cậu ở thư viện nhé!</p>
+                                    </div>
+                                </a>
+                                <!-- Chat item -->
+                                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg bg-sky-500/10">
+                                    <img src="https://placehold.co/40x40/64748b/ffffff?text=C" class="w-10 h-10 rounded-full">
+                                    <div>
+                                        <p class="font-semibold text-sm text-white">Nhóm Dự án QTKD</p>
+                                        <p class="text-xs text-sky-400">Bạn có 2 tin nhắn mới</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Center: Feed -->
+                    <div class="col-span-12 lg:col-span-6 space-y-6">
+                        <!-- Create Post -->
+                        <div class="card p-4 rounded-lg">
+                             <div class="flex items-center space-x-3">
+                                <img src="https://placehold.co/40x40/475569/ffffff?text=A" class="w-10 h-10 rounded-full">
+                                <input type="text" placeholder="Bạn đang nghĩ gì, An?" class="w-full bg-slate-700/50 border border-slate-600 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                             </div>
+                        </div>
+                        <!-- Post -->
+                        <div class="card rounded-lg overflow-hidden">
+                            <div class="p-4 flex items-center space-x-3">
+                                <img src="https://placehold.co/40x40/64748b/ffffff?text=L" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <p class="font-semibold text-white">Thuỳ Linh</p>
+                                    <p class="text-xs text-slate-400">2 giờ trước</p>
+                                </div>
+                            </div>
+                            <p class="px-4 pb-4 text-slate-300">Cuối cùng cũng xong bài tiểu luận. Đuối thực sự 😴</p>
+                             <img src="https://placehold.co/600x400/0c1427/e0e0e0?text=Done!" class="w-full object-cover">
+                             <div class="p-4 flex justify-between text-slate-400">
+                                 <button class="flex items-center space-x-2 hover:text-sky-400"><i data-lucide="thumbs-up" class="w-5 h-5"></i><span>Thích</span></button>
+                                 <button class="flex items-center space-x-2 hover:text-sky-400"><i data-lucide="message-square" class="w-5 h-5"></i><span>Bình luận</span></button>
+                                 <button class="flex items-center space-x-2 hover:text-sky-400"><i data-lucide="share-2" class="w-5 h-5"></i><span>Chia sẻ</span></button>
+                             </div>
+                        </div>
+                    </div>
+                    <!-- Right Sidebar -->
+                    <div class="hidden lg:block col-span-3">
+                         <div class="card p-4 rounded-lg">
+                            <h3 class="font-semibold text-white mb-4">Gợi ý cho bạn</h3>
+                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- CTA & FOOTER -->
-    <section id="cta-section" class="py-20 md:py-32 bg-gradient-to-r from-cyan-500 to-blue-500 text-white">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">Sẵn Sàng Gia Nhập Cộng Đồng HUBverse?</h2>
-            <button id="open-register-modal-cta" class="btn-cta bg-white text-blue-600 hover:bg-gray-100 text-lg">Đăng Ký Ngay <i class="fas fa-user-plus ml-2"></i></button>
+    <!-- Modals for Crew Letters -->
+    <div id="letter1" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="letter-content relative w-full max-w-md p-8 rounded-lg shadow-2xl text-white">
+            <button class="modal-close absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
+            <h3 class="text-2xl font-bold text-sky-300">Từ Nguyễn Văn A</h3>
+            <p class="mt-4 text-slate-300">"Chào mừng bạn đến với HUBverse! Với vai trò quản lý, tôi và đội ngũ đã dồn hết tâm huyết để tạo ra một không gian số hữu ích nhất. Hy vọng bạn sẽ có những trải nghiệm tuyệt vời."</p>
         </div>
-    </section>
-    <footer id="contact" class="footer py-16">
-        <div class="container mx-auto px-6"><div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-8"><div><h3 class="text-3xl font-bold mb-4 hubverse-title text-white">HUBverse</h3><p>Nền tảng sinh viên vì sinh viên, bởi sinh viên HUB.</p></div><div><h4 class="text-xl font-semibold mb-4 text-cyan-300">Khám Phá</h4><ul class="space-y-2"><li><a href="#" data-target-page="home" class="page-router-link">Tổng Quan</a></li><li><a href="#" data-target-page="marketplace" class="page-router-link">Chợ Sinh Viên</a></li><li><a href="#" data-target-page="digital-library" class="page-router-link">Thư Viện</a></li></ul></div><div><h4 class="text-xl font-semibold mb-4 text-cyan-300">Kết Nối</h4><div class="flex space-x-5 mb-4"><a href="#" class="text-2xl social-icon"><i class="fab fa-facebook-square"></i></a><a href="#" class="text-2xl social-icon"><i class="fab fa-instagram-square"></i></a></div><p class="text-sm">Email: support@hubverse.edu.vn</p></div></div><div class="mt-10 pt-8 border-t border-gray-700 text-center text-gray-400 text-sm"><p>&copy; <span id="currentYear"></span> HUBverse Team. All rights reserved.</p></div></div>
+    </div>
+     <div id="letter2" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="letter-content relative w-full max-w-md p-8 rounded-lg shadow-2xl text-white">
+            <button class="modal-close absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
+            <h3 class="text-2xl font-bold text-sky-300">Từ Trần Thị B</h3>
+            <p class="mt-4 text-slate-300">"Mỗi dòng code của HUBverse đều chứa đựng mong muốn mang lại sự tiện lợi cho các bạn sinh viên. Hãy khám phá và tận hưởng thành quả công nghệ này nhé!"</p>
+        </div>
+    </div>
+    <!-- Add more modals (letter3, letter4) similarly -->
+    
+    <!-- Registration Modal -->
+    <div id="register-modal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="letter-content relative w-full max-w-lg p-8 rounded-lg shadow-2xl text-white">
+            <button class="modal-close absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
+            <h3 class="text-2xl font-bold text-sky-300 mb-6 text-center">Đăng Ký Tài Khoản HUBverse</h3>
+            <form id="registration-form" class="space-y-4">
+                <div>
+                    <label for="fullname" class="block text-sm font-medium text-slate-300">Họ và Tên</label>
+                    <input type="text" id="fullname" name="fullname" class="mt-1 block w-full bg-slate-800/50 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-slate-300">Email Sinh Viên (.edu.vn)</label>
+                    <input type="email" id="email" name="email" class="mt-1 block w-full bg-slate-800/50 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" required pattern=".+@.*\.edu\.vn">
+                     <p class="mt-1 text-xs text-slate-500">Vui lòng sử dụng email do trường cấp.</p>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-slate-300">Mật khẩu</label>
+                    <input type="password" id="password" name="password" class="mt-1 block w-full bg-slate-800/50 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" required>
+                </div>
+                 <div>
+                    <label for="confirm-password" class="block text-sm font-medium text-slate-300">Xác nhận mật khẩu</label>
+                    <input type="password" id="confirm-password" name="confirm-password" class="mt-1 block w-full bg-slate-800/50 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" required>
+                </div>
+                <div class="pt-4">
+                     <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-4 rounded-lg transition-colors">
+                        Tạo Tài Khoản
+                    </button>
+                </div>
+                <p id="form-message" class="text-center text-sm h-4"></p>
+            </form>
+        </div>
+    </div>
+
+
+    <footer class="border-t border-slate-800 mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-slate-400">
+            <p>&copy; 2024 HUBverse. Một sản phẩm của sinh viên vì sinh viên HUB.</p>
+        </div>
     </footer>
 
-    <!-- MODALS & Popups -->
-    <div id="login-modal" class="modal-overlay">
-        <div class="modal-content"><button id="close-login-modal" class="modal-close-btn">&times;</button><h3 class="text-2xl font-semibold mb-6 text-center hubverse-title">Đăng Nhập</h3><form id="login-form"><div><label for="login-email" class="form-label">Email</label><input type="email" id="login-email" class="form-input" required></div><div><label for="login-password" class="form-label">Mật khẩu</label><input type="password" id="login-password" class="form-input" required></div><p id="login-error" class="text-red-600 text-sm hidden"></p><button type="submit" class="form-button mt-4">Đăng Nhập</button><p class="text-xs text-center mt-4">Chưa có tài khoản? <a href="#" id="show-register-from-login" class="text-orange-500">Đăng ký</a></p></form></div>
-    </div>
-    <div id="register-modal" class="modal-overlay">
-        <div class="modal-content"><button id="close-register-modal" class="modal-close-btn">&times;</button><h3 class="text-2xl font-semibold mb-6 text-center hubverse-title">Đăng Ký</h3><form id="register-form"><div><label for="register-name" class="form-label">Họ và Tên</label><input type="text" id="register-name" class="form-input" required></div><div><label for="register-email" class="form-label">Email</label><input type="email" id="register-email" class="form-input" required></div><div><label for="register-password" class="form-label">Mật khẩu</label><input type="password" id="register-password" class="form-input" required></div><p id="register-error" class="text-red-600 text-sm hidden"></p><button type="submit" class="form-button mt-4">Đăng Ký</button><p class="text-xs text-center mt-4">Đã có tài khoản? <a href="#" id="show-login-from-register" class="text-orange-500">Đăng nhập</a></p></form></div>
-    </div>
-    <div id="notification-toast" class="notification-toast"></div>
-    <div id="chat-boxes-container" class="fixed bottom-0 right-4 space-x-4 z-[1001] flex items-end"></div>
-    <div id="team-letter-modal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 600px; background: #fffcf2;">
-            <button id="close-letter-modal" class="modal-close-btn">&times;</button>
-            <div class="letter-header flex items-center gap-4 pb-4 border-b border-dashed border-gray-300">
-                <img id="letter-avatar" src="" alt="Avatar" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md">
-                <div>
-                    <h3 id="letter-name" class="text-2xl font-bold text-gray-800" style="font-family: 'Quicksand', sans-serif;"></h3>
-                    <p id="letter-role" class="font-semibold" style="font-family: 'Poppins', sans-serif;"></p>
-                </div>
-            </div>
-            <div id="letter-body" class="mt-6 text-gray-700 leading-relaxed" style="font-family: 'Quicksand', sans-serif; font-size: 1.1rem;">
-                <!-- Dynamic content goes here -->
-            </div>
-        </div>
-    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        lucide.createIcons();
 
-    <script type="module">
-        // Firebase Imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, setDoc, doc, getDoc, collection, updateDoc, arrayUnion, arrayRemove, serverTimestamp, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-
-        document.addEventListener('DOMContentLoaded', async function() {
-            // --- GLOBAL VARIABLES & CONFIG ---
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "YOUR_API_KEY", authDomain: "YOUR_AUTH_DOMAIN", projectId: "YOUR_PROJECT_ID" };
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-hubverse';
+        // --- Starfield Animation ---
+        const canvas = document.querySelector('.hero-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+            let mouse = { x: null, y: null };
             
-            setLogLevel('debug');
-
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            const db = getFirestore(app);
-
-            let currentUser = null;
-            let currentUserData = null; 
-            let guestQuestionCount = 3;
-            let isAppInitialized = false;
-
-            // --- MOCK DATA FOR DEMO ---
-            const mockProducts = [
-                { id: 'prod1', name: 'Giáo trình Kinh tế học quốc tế (bản mới)', price: 45000, seller: 'minh.an_k19', category: 'sach', tags: ['kinh tế quốc tế', 'giáo trình'], description: 'Sách còn mới 99%, mình học xong pass lại giá rẻ cho các em.', imageUrl: 'https://placehold.co/400x300/FFEBD9/9A3412?text=KTQT' },
-                { id: 'prod2', name: 'Máy tính Casio FX-580VNX', price: 500000, seller: 'bao.tran_k20', category: 'dungcu', tags: ['máy tính', 'casio'], description: 'Dùng được 1 học kỳ, còn full box, full chức năng, anti-fake. Thi xong không dùng nữa.', imageUrl: 'https://placehold.co/400x300/DDECFE/1E40AF?text=Casio' },
-                { id: 'prod3', name: 'Giáo trình Triết học Mác-Lênin (bản cũ)', price: 25000, seller: 'sv.namcuoi', category: 'sach', tags: ['triết học', 'đại cương'], description: 'Pass gấp lấy tiền uống trà đá. Sách có highlight vài chỗ quan trọng, mua về khỏi highlight lại.', imageUrl: 'https://placehold.co/400x300/FEF9C3/854D0E?text=Triết' },
-                { id: 'prod4', name: 'Apple Watch SE 40mm', price: 2500000, seller: 'rich.kid_hub', category: 'dungcu', tags: ['đồng hồ', 'apple watch'], description: 'Lên đời Ultra nên pass lại. Còn bảo hành, pin 95%, tặng kèm 3 dây đeo.', imageUrl: 'https://placehold.co/400x300/F3E8FF/5B21B6?text=Watch' },
-                { id: 'prod5', name: 'Balo laptop chống nước', price: 150000, seller: 'thien.ngan_art', category: 'khac', tags: ['balo', 'laptop'], description: 'Balo nhiều ngăn, đựng vừa laptop 15.6 inch. Mua về nhưng ít dùng.', imageUrl: 'https://placehold.co/400x300/E0E7FF/312E81?text=Balo' },
-                { id: 'prod6', name: '[Pass vé] Concert BlackPink', price: 1200000, seller: 'blink.hub', category: 'khac', tags: ['vé', 'concert'], description: 'Bận ôn thi cuối kỳ nên đành pass lại vé. Vị trí đẹp, giá gốc không phụ thu.', imageUrl: 'https://placehold.co/400x300/FCE7F3/831843?text=Vé' },
-            ];
-            const mockDocuments = [
-                { id: 'doc1', title: 'Slide Phân tích Báo cáo Tài chính', author: 'TS. Đoàn Anh Tuấn', category: 'tcnh', type: 'Bài giảng', url: '#' },
-                { id: 'doc2', title: 'Tổng hợp 50 câu hỏi phỏng vấn Big4', author: 'Sưu tầm', category: 'ktkt', type: 'Tài liệu', url: '#' },
-                { id: 'doc3', title: 'Case Study Marketing cho Biti\'s Hunter', author: 'Nhóm 5 - Lớp QT Mar', category: 'qtkd', type: 'Bài tập nhóm', url: '#' },
-                { id: 'doc4', title: 'Đề cương ôn tập Kinh tế Lượng', author: 'Khoa KTQT', category: 'ktqt', type: 'Đề cương', url: '#' },
-                { id: 'doc5', title: '1200 Từ vựng IELTS band 8.0', author: 'IELTS Official', category: 'nnanh', type: 'Từ vựng', url: '#' },
-                { id: 'doc6', title: 'Giáo trình SQL cho người mới bắt đầu', author: 'Khoa HTTTQL', category: 'htttql', type: 'Giáo trình', url: '#' },
-                { id: 'doc7', title: 'Luật Doanh nghiệp 2020 (tóm tắt)', author: 'Sưu tầm', category: 'luatkt', type: 'Luật', url: '#' },
-                { id: 'doc8', title: 'Bài giảng Thị trường Chứng khoán', author: 'PGS. TS. Trần Thị Kim', category: 'tcnh', type: 'Bài giảng', url: '#' },
-            ];
-            const mockPosts = [
-                { id: 'post5', authorName: 'Boss Hoài', authorUsername: 'le.hong.hoai', authorAvatar: 'https://placehold.co/40x40/fecaca/991b1b?text=H', caption: 'Thông báo: Ai là chủ nhân của con mèo tam thể đang ngủ trong phòng họp ban điều hành? Deadline đang dí mà nó nằm đó sao tôi làm việc?', imageUrl: 'https://placehold.co/600x400/fecaca/991b1b?text=Mèo+Tìm+Chủ', location: 'Văn phòng HUBverse', likes: 555 },
-                { id: 'post6', authorName: 'Kim Hường', authorUsername: 'kim.huong.content', authorAvatar: 'https://placehold.co/40x40/ddd6fe/5b21b6?text=H', caption: 'Sau 7749 lần nghĩ caption, mình quyết định... không nghĩ nữa. Mọi người tự xem ảnh và cảm nhận nhé. #cạn_ý_tưởng', imageUrl: 'https://placehold.co/600x400/ddd6fe/5b21b6?text=Hết+chất+xám', location: 'Quán cà phê quen', likes: 123 },
-                { id: 'post7', authorName: 'Duyên dáng', authorUsername: 'my.duyen.mkt', authorAvatar: 'https://placehold.co/40x40/bae6fd/0c4a6e?text=D', caption: 'Chạy quảng cáo cho HUBverse tốn bao nhiêu không biết, chứ một ly trà sữa cho team mỗi ngày là có thật. #worklifebalance', imageUrl: 'https://placehold.co/600x400/bae6fd/0c4a6e?text=Trà+Sữa+Marketing', location: 'Trà sữa Ông Thọ', likes: 456 },
-                { id: 'post9', authorName: 'Báo Trân', authorUsername: 'bao.tran.web', authorAvatar: 'https://placehold.co/40x40/bbf7d0/14532d?text=T', caption: 'Chụp ảnh "sống ảo" tại thư viện. Xin thề là mình có đọc sách, không phải chỉ vào để chụp ảnh đâu nha. #studygram', imageUrl: 'https://placehold.co/600x400/fef08a/854d0e?text=Sống+ảo+tri+thức', location: 'Thư viện HUB', likes: 1024 },
-                { id: 'post8', authorName: 'Thiên Ngân', authorUsername: 'nganana23', authorAvatar: 'https://placehold.co/40x40/fef08a/854d0e?text=N', caption: 'Fix xong cái bug thứ 100 trong ngày. Tóc rụng hết rồi, ai có địa chỉ bán tóc giả uy tín không?', imageUrl: 'https://placehold.co/600x400/bbf7d0/14532d?text=Code+Bay+Màu', location: 'Một nơi tăm tối', likes: 789 },
-                { id: 'post1', authorName: 'Phước Nguyễn', authorUsername: 'phuoc.nguyen', authorAvatar: 'https://placehold.co/40x40/dbeafe/1e40af?text=P', caption: 'Trà đá cổng sau cơ sở Hoàng Diệu 2 vẫn là chân ái mọi người ạ. 3k một ly, chỗ ngồi "view" triệu đô nhìn dòng người hối hả.', location: 'Thủ Đức, TP.HCM', likes: 102 },
-                { id: 'post2', authorName: 'Minh Anh', authorUsername: 'minhanh.hub', authorAvatar: 'https://placehold.co/40x40/fce7f3/9d174d?text=M', caption: 'Điểm danh team K20 chuẩn bị chạy deadline ngập mặt nào :)) Ai có bí kíp qua môn Tư tưởng không chia sẻ với...', imageUrl: 'https://placehold.co/600x400/FFF7ED/C2410C?text=Deadline', location: 'Thư viện HUB', likes: 256 },
-                { id: 'post3', authorName: 'Bảo Trân Foodie', authorUsername: 'baotran.foodie', authorAvatar: 'https://placehold.co/40x40/ecfdf5/047857?text=B', caption: 'Mới phát hiện quán bún đậu mắm tôm gần cơ sở Hàm Nghi siêu đỉnh, đầy đặn mà có 45 cành. Ai cần review chi tiết không?', location: 'Quận 1, TP.HCM', likes: 312 },
-                { id: 'post4', authorName: 'Sinh Viên Năm Cuối', authorUsername: 'sv.namcuoi', authorAvatar: 'https://placehold.co/40x40/f3f4f6/4b5563?text=S', caption: 'Có ai pass lại môn Xác suất thống kê không ạ, em cảm ơn và hậu tạ bằng 1 ly trà sữa full topping ạ :((', location: 'Tìm đồng đội', likes: 55 },
-            ];
-            const demoUserFriends = [
-                { id: 'friend1', name: 'Bảo Trân Foodie', avatar: 'https://placehold.co/40x40/ecfdf5/047857?text=B', online: true },
-                { id: 'friend2', name: 'Phước Nguyễn', avatar: 'https://placehold.co/40x40/dbeafe/1e40af?text=P', online: false },
-                { id: 'friend3', name: 'Minh Anh', avatar: 'https://placehold.co/40x40/fce7f3/9d174d?text=M', online: true },
-                { id: 'friend4', name: 'Boss Hoài', avatar: 'https://placehold.co/40x40/fecaca/991b1b?text=H', online: true },
-                { id: 'friend5', name: 'Duyên dáng', avatar: 'https://placehold.co/40x40/bae6fd/0c4a6e?text=D', online: false },
-            ];
-            const demoUserConversations = [
-                { friendId: 'friend4', name: 'Boss Hoài', lastMessage: 'Em tìm chủ cho con mèo chưa?', unread: 1, avatar: 'https://placehold.co/40x40/fecaca/991b1b?text=H' },
-                { friendId: 'friend5', name: 'Duyên dáng', lastMessage: 'Mai có đi uống trà sữa không em?', unread: 0, avatar: 'https://placehold.co/40x40/bae6fd/0c4a6e?text=D' },
-            ];
-
-            // --- NOTIFICATION FUNCTION ---
-            function showToast(message) {
-                const toast = document.getElementById('notification-toast');
-                if (!toast) return;
-                toast.textContent = message;
-                toast.classList.add('show');
-                setTimeout(() => { toast.classList.remove('show'); }, 3000);
-            }
-
-            // --- AUTHENTICATION & USER MANAGEMENT ---
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) { await signInWithCustomToken(auth, __initial_auth_token); } 
-                else { await signInAnonymously(auth); }
-            } catch (error) {
-                console.error("Auth initialization failed:", error);
-                await signInAnonymously(auth);
-            }
-            
-            onAuthStateChanged(auth, async (user) => {
-                if (user && !user.isAnonymous) {
-                    currentUser = user;
-                    // Prevent demo user from being overwritten by auth state
-                    if (currentUserData && currentUserData.id === 'demo-user-ngan' && currentUser.email !== 'nganana23@gmail.com') {
-                        currentUserData = null; 
-                    }
-                    
-                    if (!currentUserData || currentUserData.id !== 'demo-user-ngan') {
-                        const userDocRef = doc(db, `/artifacts/${appId}/users`, user.uid);
-                        const userDocSnap = await getDoc(userDocRef);
-                        
-                        if (userDocSnap.exists()) {
-                            currentUserData = { id: user.uid, ...userDocSnap.data() };
-                        } else {
-                            console.warn(`User doc for ${user.uid} not found immediately after auth change. This can happen on registration.`);
-                        }
-                    }
-                } else { // User is null, anonymous, or logged out
-                    currentUser = null;
-                    currentUserData = null;
-                }
-
-                // Initialize the app once auth state is confirmed
-                if (!isAppInitialized) {
-                    initApp();
-                    isAppInitialized = true;
-                }
-
-                // Update UI based on the new auth state
-                updateUIForAuthState();
-            });
-
-            function updateUIForAuthState() {
-                if (currentUserData) {
-                    updateUIAfterLogin();
-                    loadDynamicContentForUser();
-                } else {
-                    updateUIAfterLogout();
-                    loadDynamicContentForGuest();
-                }
-            }
-            
-            function loadDynamicContentForUser() {
-                document.getElementById('social-guest-view').classList.add('hidden');
-                document.getElementById('social-user-view').classList.remove('hidden');
-                document.getElementById('ai-question-limit').classList.add('hidden');
-                renderSocialFeed(mockPosts.sort((a, b) => (b.likes || 0) - (a.likes || 0)));
-                renderSocialSidebars();
-                loadChatHistory();
-            }
-
-            function loadDynamicContentForGuest() {
-                document.getElementById('social-user-view').classList.add('hidden');
-                document.getElementById('social-guest-view').classList.remove('hidden');
-                const aiLimitEl = document.getElementById('ai-question-limit');
-                if (aiLimitEl) {
-                    aiLimitEl.classList.remove('hidden');
-                    document.getElementById('question-limit-count').textContent = guestQuestionCount;
-                }
-                loadChatHistory();
-            }
-
-            document.getElementById('login-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                const errorEl = document.getElementById('login-error');
-                errorEl.classList.add('hidden');
-
-                if (email === 'nganana23@gmail.com' && password === '12345678') {
-                    currentUserData = { id: 'demo-user-ngan', name: 'Thiên Ngân', username: 'nganana23', email: 'nganana23@gmail.com', avatar: 'https://placehold.co/40x40/fef08a/854d0e?text=N', friends: demoUserFriends, conversations: demoUserConversations, savedPosts: ['post8', 'post2'], likedPosts: ['post9', 'post8', 'post7']};
-                    updateUIAfterLogin();
-                    loadDynamicContentForUser();
-                    closeModal(document.getElementById('login-modal'));
-                    showToast("Đăng nhập thành công với tài khoản Demo!");
-                    return;
-                }
-                
-                try {
-                    await signInWithEmailAndPassword(auth, email, password);
-                    closeModal(document.getElementById('login-modal'));
-                    showToast("Đăng nhập thành công!");
-                } catch (error) {
-                    errorEl.textContent = "Email hoặc mật khẩu không đúng.";
-                    errorEl.classList.remove('hidden');
-                }
-            });
-
-            document.getElementById('register-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const name = document.getElementById('register-name').value;
-                const email = document.getElementById('register-email').value;
-                const password = document.getElementById('register-password').value;
-                const errorEl = document.getElementById('register-error');
-                errorEl.classList.add('hidden');
-                if (password.length < 6) {
-                    errorEl.textContent = "Mật khẩu phải có ít nhất 6 ký tự.";
-                    errorEl.classList.remove('hidden');
-                    return;
-                }
-
-                try {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    const user = userCredential.user;
-                    const newUserDoc = { name: name, username: email.split('@')[0].replace(/[^a-zA-Z0-9]/g, ''), email: email, avatar: `https://placehold.co/56x56/FFE4E6/DC2626?text=${name.charAt(0).toUpperCase()}`, friends: [], savedPosts: [], likedPosts: [], createdAt: serverTimestamp() };
-                    const userDocRef = doc(db, `/artifacts/${appId}/users`, user.uid);
-                    await setDoc(userDocRef, newUserDoc);
-                    // onAuthStateChanged will automatically pick up the new user and update the UI.
-                    closeModal(document.getElementById('register-modal'));
-                    showToast("Đăng ký thành công và đã đăng nhập!");
-                } catch (error) {
-                    errorEl.textContent = error.code === 'auth/email-already-in-use' ? "Email này đã được sử dụng." : "Đã xảy ra lỗi. Vui lòng thử lại.";
-                    errorEl.classList.remove('hidden');
-                }
-            });
-
-            async function handleLogout() {
-                const isDemo = currentUserData && currentUserData.id === 'demo-user-ngan';
-                if (isDemo) {
-                    currentUserData = null; 
-                }
-                await signOut(auth); 
-                showToast("Đã đăng xuất.");
-            }
-
-            function updateUIAfterLogin() { 
-                const authContainer = document.getElementById('auth-container');
-                const newPostBox = document.getElementById('new-post-box');
-                if (!currentUserData) return;
-                authContainer.innerHTML = `<div class="flex items-center gap-4"><span class="font-semibold text-gray-700 hidden sm:block">${currentUserData.name}</span><img src="${currentUserData.avatar}" alt="avatar" class="w-10 h-10 rounded-full cursor-pointer object-cover"><button id="logout-btn" title="Đăng xuất" class="text-gray-500 hover:text-red-500 transition-colors"><i class="fas fa-sign-out-alt text-lg"></i></button></div>`;
-                document.getElementById('logout-btn').addEventListener('click', handleLogout);
-                newPostBox.classList.remove('hidden');
-                newPostBox.innerHTML = `<div class="flex items-start"><img src="${currentUserData.avatar}" alt="User Avatar" class="w-10 h-10 rounded-full mr-3 object-cover"><textarea id="new-post-content" placeholder="Bạn đang nghĩ gì, ${currentUserData.name}?" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-sm bg-gray-50" rows="3"></textarea></div><div class="flex justify-between items-center mt-3 pt-3 border-t"><button class="text-pink-600 hover:bg-pink-100 py-2 px-3 rounded-md text-sm"><i class="fas fa-image mr-1"></i> Ảnh/Video</button><button id="submit-post-btn" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-5 rounded-md text-sm">Đăng</button></div>`;
-                document.getElementById('submit-post-btn').addEventListener('click', handleCreatePost);
-            }
-
-            function updateUIAfterLogout() { 
-                document.getElementById('auth-container').innerHTML = `<button id="open-login-modal-btn" class="btn-login">Đăng Nhập</button>`;
-                document.getElementById('open-login-modal-btn').addEventListener('click', (e) => { e.preventDefault(); openModal(document.getElementById('login-modal')); });
-                document.getElementById('new-post-box').classList.add('hidden');
-            }
-            
-            function renderMarketplace(products) { const grid = document.getElementById('product-grid'); if(!grid) return; grid.innerHTML = ''; products.forEach(p => grid.appendChild(createProductCard(p))); }
-            function renderLibrary(documents) { const grid = document.getElementById('document-grid'); if(!grid) return; grid.innerHTML = ''; documents.forEach(d => grid.appendChild(createDocumentCard(d))); }
-            function renderSocialFeed(posts) { const c = document.getElementById('social-feed-container'); if(!c) return; c.innerHTML = ''; posts.forEach(p => c.appendChild(createPostCard(p))); }
-            
-            function createProductCard(product) { 
-                const card = document.createElement('div');
-                card.className = 'product-card flex flex-col transition-all duration-300';
-                card.dataset.category = product.category || 'khac';
-                card.innerHTML = `<div class="relative overflow-hidden rounded-t-lg"><img src="${product.imageUrl}" alt="${product.name}" class="w-full h-52 object-cover transition-transform duration-300 group-hover:scale-110" onerror="this.onerror=null;this.src='https://placehold.co/400x300/FFEBD9/9A3412?text=Ảnh+SP';"></div><div class="p-5 flex flex-col flex-grow"><h3 class="text-lg font-bold mb-2 text-gray-800 leading-tight">${product.name}</h3><p class="text-xl font-extrabold mb-3 text-red-600">${parseInt(product.price).toLocaleString('vi-VN')} VNĐ</p><div class="text-xs text-gray-500 mb-3 space-y-1"><p><i class="fas fa-user-circle mr-1.5 text-gray-400"></i> ${product.seller || 'Người bán ẩn danh'}</p><p><i class="fas fa-tag mr-1.5 text-gray-400"></i> ${product.tags ? product.tags.join(', ') : 'Chưa gắn thẻ'}</p></div><p class="text-gray-600 text-sm mb-4 flex-grow line-clamp-3">${product.description}</p><button class="mt-auto w-full font-semibold py-2.5 px-4 rounded-lg text-sm bg-orange-500 text-white hover:bg-orange-600 transition-colors"><i class="fas fa-cart-plus mr-2"></i>Thêm vào giỏ</button></div>`;
-                return card;
-            }
-
-            function createDocumentCard(docData) { 
-                const card = document.createElement('div');
-                card.className = 'document-card flex flex-col p-6 text-center hover:shadow-sky-200/50 transition-all duration-300';
-                card.dataset.category = docData.category || 'all';
-                card.innerHTML = `<div class="w-24 h-32 mx-auto mb-4 flex items-center justify-center"><i class="fas fa-file-alt text-6xl text-sky-400"></i></div><h3 class="text-base font-bold mb-2 text-gray-800 flex-grow">${docData.title}</h3><p class="text-xs text-gray-500 mb-3"><span class="bg-sky-100 text-sky-700 py-0.5 px-2 rounded-full font-medium">${docData.type}</span></p><a href="${docData.url}" target="_blank" class="w-full block font-semibold py-2 px-4 rounded-lg text-sm bg-sky-500 text-white hover:bg-sky-600 transition-colors"><i class="fas fa-download mr-2"></i>Tải Về</a>`;
-                return card;
-             }
-            function createPostCard(post) { 
-                const article = document.createElement('article');
-                article.className = 'insta-post-card';
-                article.dataset.postId = post.id;
-                const isLiked = currentUserData?.likedPosts?.includes(post.id);
-                const isSaved = currentUserData?.savedPosts?.includes(post.id);
-                article.innerHTML = `<header class="insta-post-header"><img src="${post.authorAvatar}" alt="${post.authorName} Avatar" class="avatar object-cover"><div><a href="#" class="username">${post.authorUsername}</a><div class="location">${post.location || 'HUB, TP.HCM'}</div></div><button class="options-btn"><i class="fas fa-ellipsis-h"></i></button></header>${post.imageUrl ? `<img src="${post.imageUrl}" alt="Post image" class="insta-post-image" onerror="this.style.display='none'">` : ''}<div class="px-4 pt-3 pb-1"><p class="text-gray-800">${post.caption}</p></div><section class="insta-post-actions"><button class="like-btn ${isLiked ? 'liked' : ''}" title="Thích"><i class="fa-${isLiked ? 'solid' : 'regular'} fa-heart"></i></button><button class="comment-btn" title="Bình luận"><i class="far fa-comment"></i></button><button class="share-btn" title="Chia sẻ"><i class="far fa-paper-plane"></i></button><button class="save-btn ${isSaved ? 'saved' : ''}"><i class="fa-${isSaved ? 'solid' : 'regular'} fa-bookmark"></i></button></section><section class="px-4 pb-2 insta-post-likes"><span class="like-count font-semibold">${post.likes || 0}</span> lượt thích</section>`;
-                article.querySelector('.like-btn').addEventListener('click', (e) => { e.preventDefault(); handleLike(post.id, e.currentTarget); });
-                article.querySelector('.save-btn').addEventListener('click', (e) => { e.preventDefault(); handleSave(post.id, e.currentTarget); });
-                return article;
-            }
-            async function handleCreatePost() { /* ... */ }
-            async function handleLike(postId, button) { /* ... */ }
-            async function handleSave(postId, button) { /* ... */ }
-
-            function renderSocialSidebars() {
-                renderProfileSidebar();
-                renderFriendsSidebar();
-            }
-
-            function renderProfileSidebar() {
-                const container = document.getElementById('social-profile-sidebar');
-                if (!container) return;
-                let profileHtml = '';
-                if(currentUserData) {
-                    profileHtml = `<div class="bg-white p-5 rounded-lg shadow border"><div class="flex items-center mb-4"><img src="${currentUserData.avatar}" alt="Your Avatar" class="w-14 h-14 rounded-full mr-4 object-cover"><div><p class="font-semibold text-gray-800">${currentUserData.name}</p><p class="text-sm text-gray-500">@${currentUserData.username}</p></div></div></div>`;
-                } else {
-                    profileHtml = `<div class="bg-white p-5 rounded-lg shadow border text-center"><p class="text-sm text-gray-600">Chào mừng đến HUBverse!</p></div>`;
-                }
-                container.innerHTML = profileHtml + `<div class="bg-white p-5 rounded-lg shadow border"><h4 class="text-sm font-semibold text-gray-500 mb-3">Gợi ý cho bạn</h4><div class="space-y-3"><p class="text-xs text-gray-400">Tính năng đang phát triển.</p></div></div>`;
-            }
-
-            function renderFriendsSidebar() {
-                const container = document.getElementById('social-friends-sidebar');
-                if(!container) return;
-                if (!currentUserData) {
-                    container.innerHTML = "";
-                    return;
-                }
-                
-                const friends = currentUserData.friends || [];
-                const conversations = currentUserData.conversations || [];
-                
-                let friendsHtml = friends.map(friend => `
-                    <div class="friend-item flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer" onclick="openChatBox(this)" data-friend-id="${friend.id}" data-friend-name="${friend.name}" data-friend-avatar="${friend.avatar}">
-                        <div class="relative"><img src="${friend.avatar}" alt="${friend.name}" class="w-10 h-10 rounded-full object-cover"><span class="online-status ${friend.online ? 'online' : ''} absolute bottom-0 right-0"></span></div>
-                        <span class="font-medium text-sm text-gray-700">${friend.name}</span>
-                    </div>`).join('');
-
-                let convosHtml = conversations.map(convo => `
-                    <div class="friend-item flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer" onclick="openChatBox(this)" data-friend-id="${convo.friendId}" data-friend-name="${convo.name}" data-friend-avatar="${convo.avatar}">
-                        <img src="${convo.avatar}" alt="${convo.name}" class="w-10 h-10 rounded-full object-cover">
-                        <div class="flex-grow overflow-hidden"><p class="font-semibold text-sm truncate">${convo.name}</p><p class="text-xs text-gray-500 truncate">${convo.unread ? `<strong>${convo.lastMessage}</strong>` : convo.lastMessage}</p></div>
-                        ${convo.unread ? `<div class="w-3 h-3 bg-pink-500 rounded-full flex-shrink-0"></div>` : ''}
-                    </div>`).join('');
-
-                container.innerHTML = `
-                    <div class="bg-white p-4 rounded-lg shadow border">
-                        <div class="flex border-b mb-2"><button data-pane="messages" class="sidebar-tab active-sidebar-tab">Tin nhắn</button><button data-pane="online-friends" class="sidebar-tab">Đang hoạt động</button></div>
-                        <div id="messages" class="sidebar-tab-pane active-sidebar-pane space-y-2">${convosHtml || '<p class="text-xs text-center text-gray-500 p-4">Không có tin nhắn nào.</p>'}</div>
-                        <div id="online-friends" class="sidebar-tab-pane space-y-2">${friendsHtml || '<p class="text-xs text-center text-gray-500 p-4">Không có bạn bè nào.</p>'}</div>
-                    </div>`;
-                
-                container.querySelectorAll('.sidebar-tab').forEach(tab => tab.addEventListener('click', (e) => {
-                    const targetPaneId = e.currentTarget.dataset.pane;
-                    container.querySelector('.active-sidebar-tab').classList.remove('active-sidebar-tab');
-                    e.currentTarget.classList.add('active-sidebar-tab');
-                    container.querySelectorAll('.sidebar-tab-pane').forEach(pane => pane.classList.toggle('active-sidebar-pane', pane.id === targetPaneId));
-                }));
-            }
-            
-            // --- AI CHATBOT LOGIC ---
-            const geminiChatInput = document.getElementById('gemini-chat-input');
-            const geminiSendButton = document.getElementById('gemini-send-button');
-            let chatHistory = [];
-            const systemInstruction = {
-                role: "system",
-                parts: [{ text: "You are a friendly and helpful study assistant for students at HUB (Ho Chi Minh City University of Banking). Be encouraging, provide clear explanations for academic questions, and keep a positive tone. Your name is HUB AI." }]
+            const setCanvasSize = () => {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
             };
 
-            async function loadChatHistory() {
-                 const initialMessage = "Xin chào! Mình là HUB AI, người bạn đồng hành học tập của bạn. Bạn cần hỗ trợ gì hôm nay?";
-                 const welcomeMessage = { role: "model", parts: [{text: initialMessage}] };
-                 
-                 chatHistory = [welcomeMessage]; // Reset history for display
-                 
-                 if (currentUserData) {
-                    const chatRef = doc(db, `/artifacts/${appId}/users/${currentUserData.id}/private/chatHistory`);
-                    const docSnap = await getDoc(chatRef);
-                    if (docSnap.exists() && docSnap.data().messages) {
-                        chatHistory = docSnap.data().messages;
-                    } else {
-                        await setDoc(chatRef, { messages: chatHistory });
-                    }
-                 }
-
-                 const geminiChatMessages = document.getElementById('gemini-chat-messages');
-                 if(geminiChatMessages) {
-                    geminiChatMessages.innerHTML = '';
-                    chatHistory.forEach(msg => addGeminiMessage(msg.parts[0].text, msg.role));
-                 }
-            }
-            function addGeminiMessage(message, sender, isLoading = false) {
-                const geminiChatMessages = document.getElementById('gemini-chat-messages');
-                if (!geminiChatMessages) return;
-                const bubbleDiv = document.createElement('div');
-                const senderClass = sender === 'model' ? 'ai' : 'user';
-                bubbleDiv.classList.add('gemini-chat-bubble', senderClass);
-
-                const avatarDiv = document.createElement('div');
-                avatarDiv.classList.add('avatar');
-                if (senderClass === 'user') {
-                    avatarDiv.classList.add('avatar-user');
-                    avatarDiv.textContent = currentUserData ? currentUserData.name.charAt(0).toUpperCase() : 'B';
-                } else {
-                    avatarDiv.classList.add('avatar-ai');
-                    avatarDiv.innerHTML = `<i class="fas fa-brain"></i>`;
+            const initStars = () => {
+                stars = [];
+                // Increase star count for a denser starfield
+                const starCount = (canvas.width * canvas.height) / 2000; 
+                for (let i = 0; i < starCount; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 1.5 + 0.5, // Slightly larger stars
+                        vx: (Math.random() - 0.5) / 4,
+                        vy: (Math.random() - 0.5) / 4,
+                        opacity: Math.random() * 0.5 + 0.3,
+                        twinkleSpeed: (Math.random() - 0.5) * 0.015
+                    });
                 }
-
-                const messageContentDiv = document.createElement('div');
-                messageContentDiv.classList.add('message-content');
-                messageContentDiv.innerHTML = isLoading ? `<p class="animate-pulse">Đang suy nghĩ...</p>` : `<p>${message.replace(/\n/g, '<br>')}</p>`;
-                if (isLoading) bubbleDiv.id = 'loading-bubble';
-                
-                bubbleDiv.append(avatarDiv, messageContentDiv);
-                geminiChatMessages.appendChild(bubbleDiv);
-                geminiChatMessages.scrollTop = geminiChatMessages.scrollHeight;
-            }
-            async function handleSendMessage() {
-                const isGuest = !currentUserData;
-                if (isGuest && guestQuestionCount <= 0) {
-                    showToast("Bạn đã hết lượt hỏi miễn phí. Vui lòng đăng nhập.");
-                    openModal(document.getElementById('login-modal'));
-                    return;
-                }
-                const userMessage = geminiChatInput.value.trim();
-                if (!userMessage) return;
-
-                addGeminiMessage(userMessage, 'user');
-                geminiChatInput.value = '';
-                addGeminiMessage('', 'model', true); // Show loading indicator
-
-                if(isGuest) {
-                    guestQuestionCount--;
-                    document.getElementById('question-limit-count').textContent = guestQuestionCount;
-                }
-
-                // Add system instruction to the beginning of the payload
-                const currentConversation = [systemInstruction, ...chatHistory, { role: "user", parts: [{ text: userMessage }] }];
-                const payload = { contents: currentConversation };
-                const apiKey = ""; 
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                
-                try {
-                    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                    const result = await response.json();
-                    
-                    document.getElementById('loading-bubble')?.remove();
-
-                    if (result.candidates && result.candidates[0]?.content?.parts[0]) {
-                        const aiResponse = result.candidates[0].content.parts[0].text;
-                        addGeminiMessage(aiResponse, 'model');
-                        chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
-                        chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
-                        if (!isGuest) {
-                            const chatRef = doc(db, `/artifacts/${appId}/users/${currentUserData.id}/private/chatHistory`);
-                            await setDoc(chatRef, { messages: chatHistory });
-                        }
-                    } else { 
-                        console.error("Gemini API Error Response:", result);
-                        addGeminiMessage("Xin lỗi, tôi không thể tạo phản hồi lúc này.", 'model'); 
-                    }
-                } catch (error) {
-                    console.error("Gemini API Fetch Error:", error);
-                    document.getElementById('loading-bubble')?.remove();
-                    addGeminiMessage("Đã có lỗi mạng. Vui lòng thử lại.", 'model');
-                }
-            }
-
-            window.openChatBox = (el) => {
-                const { friendId, friendName, friendAvatar } = el.dataset;
-                const chatContainer = document.getElementById('chat-boxes-container');
-                if (document.getElementById(`chat-box-${friendId}`)) return; 
-                const chatBox = document.createElement('div');
-                chatBox.id = `chat-box-${friendId}`;
-                chatBox.className = 'chat-box';
-                chatBox.innerHTML = `
-                    <div class="chat-box-header" onclick="this.parentElement.classList.toggle('minimized')">
-                        <img src="${friendAvatar}" class="w-8 h-8 rounded-full mr-3 object-cover"/>
-                        <span class="font-semibold flex-grow">${friendName}</span>
-                        <button class="mr-2 hover:bg-white/20 p-1 rounded-full"><i class="fas fa-minus text-xs"></i></button>
-                        <button class="hover:bg-white/20 p-1 rounded-full" onclick="event.stopPropagation(); this.closest('.chat-box').remove()"><i class="fas fa-times text-xs"></i></button>
-                    </div>
-                    <div class="chat-box-body"><div class="chat-box-bubble received">Chào bạn, có gì không?</div></div>
-                    <div class="chat-box-footer"><input type="text" placeholder="Nhắn tin..." class="chat-box-input"/><button class="text-pink-500"><i class="fas fa-paper-plane"></i></button></div>`;
-                chatContainer.appendChild(chatBox);
             };
 
-            // --- PAGE ROUTING & INITIALIZATION ---
-            function initApp() {
-                document.getElementById('currentYear').textContent = new Date().getFullYear();
-                const pageRouterLinks = document.querySelectorAll('.page-router-link');
-                const pageSections = document.querySelectorAll('.page-content-section');
-                const navLinks = document.querySelectorAll('header nav .nav-link');
+            const animate = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(star => {
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    
+                    // Twinkle effect
+                    star.opacity += star.twinkleSpeed;
+                    if (star.opacity > 1 || star.opacity < 0.3) {
+                        star.twinkleSpeed = -star.twinkleSpeed;
+                    }
+                    ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                    ctx.fill();
 
-                function showPage(targetPageId) {
-                    pageSections.forEach(s => s.classList.remove('active-page'));
-                    navLinks.forEach(l => l.classList.remove('active-nav-link'));
+                    star.x += star.vx;
+                    star.y += star.vy;
+                    
+                    if (star.x < 0 || star.x > canvas.width) star.vx = -star.vx;
+                    if (star.y < 0 || star.y > canvas.height) star.vy = -star.vy;
 
-                    if (targetPageId === 'home') {
-                        document.getElementById('hero-section').classList.add('active-page');
-                        document.getElementById('features-overview').classList.add('active-page');
-                        document.getElementById('team-section').classList.add('active-page');
-                    } else {
-                        const targetSection = document.getElementById(targetPageId);
-                        if (targetSection) {
-                            targetSection.classList.add('active-page');
-                        } else {
-                            // Fallback to home if target doesn't exist
-                            document.getElementById('hero-section').classList.add('active-page');
-                            document.getElementById('features-overview').classList.add('active-page');
-                            document.getElementById('team-section').classList.add('active-page');
-                            targetPageId = 'home';
+                    // Mouse interaction
+                    if (mouse.x !== null) {
+                        const dx = mouse.x - star.x;
+                        const dy = mouse.y - star.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 150) {
+                           star.x -= dx / (distance / 2);
+                           star.y -= dy / (distance / 2);
                         }
                     }
-                    const activeNavLink = document.querySelector(`header nav .nav-link[data-target-page="${targetPageId}"]`);
-                    if (activeNavLink) activeNavLink.classList.add('active-nav-link');
-                    window.scrollTo(0, 0);
-                }
-
-                pageRouterLinks.forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); showPage(e.currentTarget.dataset.targetPage); }); });
-                
-                function openModal(modal) { if (modal) modal.classList.add('active'); }
-                function closeModal(modal) { if (modal) modal.classList.remove('active'); }
-                document.body.addEventListener('click', e => { if(e.target.id === 'open-login-modal-btn') { e.preventDefault(); openModal(document.getElementById('login-modal')); } });
-                document.getElementById('open-register-modal-cta').addEventListener('click', (e) => { e.preventDefault(); openModal(document.getElementById('register-modal')); });
-                document.getElementById('login-from-social-prompt')?.addEventListener('click', (e) => { e.preventDefault(); openModal(document.getElementById('login-modal')); });
-
-                [document.getElementById('login-modal'), document.getElementById('register-modal'), document.getElementById('team-letter-modal')].forEach(modal => { 
-                    if (modal) modal.addEventListener('click', e => { if (e.target === modal || e.target.classList.contains('modal-close-btn')) closeModal(modal); }); 
                 });
-                document.getElementById('show-register-from-login').addEventListener('click', (e) => { e.preventDefault(); closeModal(document.getElementById('login-modal')); openModal(document.getElementById('register-modal')); });
-                document.getElementById('show-login-from-register').addEventListener('click', (e) => { e.preventDefault(); closeModal(document.getElementById('register-modal')); openModal(document.getElementById('login-modal')); });
-                document.getElementById('explore-now-btn').addEventListener('click', function(e) { e.preventDefault(); document.getElementById('features-overview').scrollIntoView({ behavior: 'smooth' }); });
-                
-                const newsTabsMenu = document.querySelector('.news-events-tabs-menu');
-                if(newsTabsMenu) {
-                    newsTabsMenu.addEventListener('click', (e) => {
-                        if (e.target.tagName === 'BUTTON') {
-                            newsTabsMenu.querySelector('.active-news-tab').classList.remove('active-news-tab');
-                            e.target.classList.add('active-news-tab');
-                            const targetId = e.target.dataset.target;
-                            document.querySelectorAll('.news-event-content-pane').forEach(pane => pane.classList.toggle('active', pane.id === targetId));
-                        }
-                    });
+                requestAnimationFrame(animate);
+            };
+
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - rect.left;
+                mouse.y = e.clientY - rect.top;
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+            
+            window.addEventListener('resize', () => {
+                setCanvasSize();
+                initStars();
+            });
+
+            setCanvasSize();
+            initStars();
+            animate();
+        }
+
+        // --- SPA Navigation ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const allNavLinks = [...navLinks, ...mobileMenu.querySelectorAll('.nav-link')];
+        const pageContents = document.querySelectorAll('.page-content');
+
+        allNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('data-target');
+
+                pageContents.forEach(page => page.classList.add('hidden'));
+                const targetPage = document.getElementById(targetId);
+                if (targetPage) {
+                    targetPage.classList.remove('hidden');
                 }
 
-                function setupFilter(tabContainerId, gridId, data) {
-                    const filterTabs = document.getElementById(tabContainerId);
-                    if(!filterTabs) return;
-                    filterTabs.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('filter-tab-item')) {
-                            filterTabs.querySelector('.active-tab').classList.remove('active-tab');
-                            e.target.classList.add('active-tab');
-                            const filter = e.target.dataset.filter;
-                            const filteredData = (filter === 'all') ? data : data.filter(item => item.category === filter);
-                            if(gridId === 'product-grid') renderMarketplace(filteredData);
-                            if(gridId === 'document-grid') renderLibrary(filteredData);
-                        }
-                    });
+                document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+                document.querySelectorAll(`.nav-link[data-target="${targetId}"]`).forEach(nav => nav.classList.add('active'));
+                
+                if (!mobileMenu.classList.contains('hidden')) {
+                   mobileMenu.classList.add('hidden');
                 }
-                setupFilter('marketplace-filter-tabs', 'product-grid', mockProducts);
-                setupFilter('library-filter-tabs', 'document-grid', mockDocuments);
-                renderMarketplace(mockProducts);
-                renderLibrary(mockDocuments);
-                
-                const teamLetterModal = document.getElementById('team-letter-modal');
-                document.querySelectorAll('.team-card').forEach(card => {
-                    card.addEventListener('click', () => {
-                        const { name, role, avatar, message, color } = card.dataset;
-                        document.getElementById('letter-name').textContent = name;
-                        const roleEl = document.getElementById('letter-role');
-                        roleEl.textContent = role;
-                        roleEl.style.color = color;
-                        document.getElementById('letter-avatar').src = avatar;
-                        document.getElementById('letter-body').innerHTML = `<p>${message.replace(/\n/g, '<br>')}</p>`;
-                        openModal(teamLetterModal);
-                    });
-                });
-
-                if (geminiSendButton) geminiSendButton.addEventListener('click', handleSendMessage);
-                if (geminiChatInput) geminiChatInput.addEventListener('keypress', (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } });
-                document.getElementById('login-for-more').addEventListener('click', (e) => { e.preventDefault(); openModal(document.getElementById('login-modal')); });
-
-                const heroSection = document.querySelector('.hero-section');
-                const heroCanvas = document.getElementById('hero-3d-canvas');
-                const teamSection = document.getElementById('team-section');
-                const teamCanvas = document.getElementById('team-3d-canvas');
-                
-                function createStarField(container, canvas) {
-                    if (!container || !canvas || typeof THREE === 'undefined') return;
-                    const scene = new THREE.Scene();
-                    const camera = new THREE.PerspectiveCamera(60, container.offsetWidth / container.offsetHeight, 1, 1000);
-                    camera.position.z = 1;
-                    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-                    renderer.setSize(container.offsetWidth, container.offsetHeight);
-                    
-                    const starGeo = new THREE.BufferGeometry();
-                    const starCount = 6000;
-                    const positions = new Float32Array(starCount * 3);
-                    for(let i=0; i<starCount; i++) { positions[i*3+0] = (Math.random() - 0.5) * 1000; positions[i*3+1] = (Math.random() - 0.5) * 1000; positions[i*3+2] = (Math.random() - 0.5) * 1000; }
-                    starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7, transparent: true });
-                    const stars = new THREE.Points(starGeo, starMaterial);
-                    scene.add(stars);
-                    
-                    let mouseX = 0, mouseY = 0;
-                    container.addEventListener('mousemove', (e) => { mouseX = e.clientX - window.innerWidth / 2; mouseY = e.clientY - window.innerHeight / 2; });
-                    
-                    function animate() {
-                        requestAnimationFrame(animate);
-                        stars.rotation.y = -mouseX * 0.00005;
-                        stars.rotation.x = -mouseY * 0.00005;
-                        stars.rotation.z += 0.0001;
-                        renderer.render(scene, camera);
-                    }
-                    animate();
-
-                    window.addEventListener('resize', () => {
-                        camera.aspect = container.offsetWidth / container.offsetHeight;
-                        camera.updateProjectionMatrix();
-                        renderer.setSize(container.offsetWidth, container.offsetHeight);
-                    });
-                }
-
-                createStarField(heroSection, heroCanvas);
-                createStarField(teamSection, teamCanvas);
-                
-                showPage('home');
-            }
+            });
         });
+        
+        // --- Mobile Menu Toggle ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- Modal Logic ---
+        const setupModal = (modalId, openTriggerSelector) => {
+            const modal = document.getElementById(modalId);
+            const openTriggers = document.querySelectorAll(openTriggerSelector);
+
+            if (!modal) return;
+            
+            openTriggers.forEach(trigger => {
+                 trigger.addEventListener('click', () => {
+                    const targetModalId = trigger.getAttribute('data-modal-target') || modalId;
+                    const targetModal = document.getElementById(targetModalId);
+                    if(targetModal) {
+                       targetModal.classList.remove('hidden');
+                       targetModal.classList.add('flex');
+                    }
+                });
+            });
+
+            modal.querySelectorAll('.modal-close, .modal-backdrop').forEach(el => {
+                el.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                });
+            });
+        };
+
+        // --- Setup All Modals ---
+        setupModal('letter1', '.crew-member[data-modal-target="letter1"]');
+        setupModal('letter2', '.crew-member[data-modal-target="letter2"]');
+        // Add other crew modals here if needed
+        setupModal('register-modal', '#open-register-modal');
+        
+        // Close any modal with the generic class
+        document.querySelectorAll('.modal .modal-close, .modal .modal-backdrop').forEach(el => {
+            el.addEventListener('click', () => {
+                el.closest('.modal').classList.add('hidden');
+                el.closest('.modal').classList.remove('flex');
+            });
+        });
+        
+        // --- Registration Form Logic ---
+        const registrationForm = document.getElementById('registration-form');
+        if(registrationForm) {
+            registrationForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                const messageEl = document.getElementById('form-message');
+                
+                messageEl.textContent = ''; // Clear previous message
+
+                if (password !== confirmPassword) {
+                    messageEl.textContent = 'Mật khẩu xác nhận không khớp. Vui lòng thử lại.';
+                    messageEl.className = 'text-center text-sm h-4 text-red-400';
+                } else {
+                    messageEl.textContent = 'Đăng ký thành công! (Chức năng Demo)';
+                    messageEl.className = 'text-center text-sm h-4 text-green-400';
+                    registrationForm.reset();
+                    // Close modal after a delay
+                    setTimeout(() => {
+                        const registerModal = document.getElementById('register-modal');
+                        registerModal.classList.add('hidden');
+                        registerModal.classList.remove('flex');
+                        messageEl.textContent = ''; 
+                    }, 2000);
+                }
+            });
+        }
+
+
+        // --- Product Filter Logic ---
+        const filterButtons = document.querySelectorAll('#product-filters .filter-btn');
+        const productItems = document.querySelectorAll('.product-item');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const category = button.getAttribute('data-category');
+
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('bg-sky-500', 'text-white');
+                    btn.classList.add('bg-slate-700', 'text-slate-300');
+                });
+                button.classList.add('bg-sky-500', 'text-white');
+                button.classList.remove('bg-slate-700', 'text-slate-300');
+
+                productItems.forEach(item => {
+                    item.style.display = 'none'; // Hide all first
+                    if (category === 'all' || item.getAttribute('data-category') === category) {
+                        item.style.display = 'block'; // Then show matching
+                    }
+                });
+            });
+        });
+    });
     </script>
 </body>
 </html>
