@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUBverse - Hệ sinh thái cho Sinh viên HUB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #0c1427; /* Dark blue space background */
+            color: #e0e0e0;
+        }
+        .hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link.active {
+            color: #38bdf8; /* Light blue for active link */
+        }
+        .nav-link:not(.active):hover {
+            color: #ffffff;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #38bdf8;
+            transition: width 0.3s ease;
+        }
+        .nav-link.active::after,
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .card {
+            background-color: rgba(18, 27, 51, 0.6); /* Semi-transparent card background */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(56, 189, 248, 0.2);
+        }
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+        .letter-content {
+            background: url('https://www.transparenttextures.com/patterns/stardust.png'), linear-gradient(135deg, #1e3a8a, #0c1427);
+            border: 1px solid #38bdf8;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="bg-slate-900/50 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-white tracking-wider">
+                <span class="text-sky-400">HUB</span>verse
+            </a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#" class="nav-link active" data-target="home">Trang Chủ</a>
+                <a href="#" class="nav-link" data-target="market">Pass Tài Liệu</a>
+                <a href="#" class="nav-link" data-target="library">Thư Viện Số</a>
+                <a href="#" class="nav-link" data-target="news">Tin Tức</a>
+                <a href="#" class="nav-link" data-target="ai-chat">AI Chat</a>
+                <a href="#" class="nav-link" data-target="social">Kết Nối</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="px-4 py-2 text-sm font-medium text-white bg-sky-500/20 border border-sky-500 rounded-lg hover:bg-sky-500/40 transition-colors">Đăng nhập</button>
+                 <button class="md:hidden" id="mobile-menu-button">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
+             <a href="#" class="block py-2 nav-link active" data-target="home">Trang Chủ</a>
+             <a href="#" class="block py-2 nav-link" data-target="market">Pass Tài Liệu</a>
+             <a href="#" class="block py-2 nav-link" data-target="library">Thư Viện Số</a>
+             <a href="#" class="block py-2 nav-link" data-target="news">Tin Tức</a>
+             <a href="#" class="block py-2 nav-link" data-target="ai-chat">AI Chat</a>
+             <a href="#" class="block py-2 nav-link" data-target="social">Kết Nối</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-16">
+        <!-- Section: Home -->
+        <section id="home" class="page-content">
+            <!-- Hero Section -->
+            <div class="relative h-[60vh] md:h-[80vh] flex items-center justify-center text-center rounded-2xl overflow-hidden -mt-16">
+                <canvas class="hero-canvas"></canvas>
+                <div class="hero-content max-w-3xl">
+                    <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight">Tắt lơ ngơ - <span class="text-sky-400">Bật HUBverse</span></h1>
+                    <p class="mt-4 text-lg md:text-xl text-slate-300">Hệ sinh thái toàn diện dành cho sinh viên Đại học Ngân hàng TP.HCM, nơi mọi kết nối và tri thức đều nằm trong tầm tay bạn.</p>
+                    <button class="mt-8 px-8 py-3 bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-600 transition-all transform hover:scale-105">Khám Phá Ngay</button>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="mt-24">
+                <h2 class="text-3xl font-bold text-center text-white">5 Chức Năng Cốt Lõi</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mt-12">
+                    <div class="card p-6 text-center rounded-xl">
+                        <i data-lucide="shopping-cart" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h3 class="mt-4 text-xl font-semibold text-white">Pass Tài Liệu</h3>
+                        <p class="mt-2 text-sm text-slate-400">Chợ sinh viên thu nhỏ, mua bán giáo trình và vật dụng học tập.</p>
+                    </div>
+                    <div class="card p-6 text-center rounded-xl">
+                        <i data-lucide="library" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h3 class="mt-4 text-xl font-semibold text-white">Thư Viện Số</h3>
+                        <p class="mt-2 text-sm text-slate-400">Kho tài liệu số hóa khổng lồ, phân loại theo từng chuyên ngành.</p>
+                    </div>
+                    <div class="card p-6 text-center rounded-xl">
+                        <i data-lucide="newspaper" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h3 class="mt-4 text-xl font-semibold text-white">Tin Tức & Sự Kiện</h3>
+                        <p class="mt-2 text-sm text-slate-400">Cập nhật nhanh nhất mọi hoạt động, sự kiện từ HUB.</p>
+                    </div>
+                    <div class="card p-6 text-center rounded-xl">
+                        <i data-lucide="bot" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h3 class="mt-4 text-xl font-semibold text-white">AI Chat</h3>
+                        <p class="mt-2 text-sm text-slate-400">Trợ lý ảo thông minh, giải đáp mọi thắc mắc 24/7.</p>
+                    </div>
+                    <div class="card p-6 text-center rounded-xl">
+                        <i data-lucide="users" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h3 class="mt-4 text-xl font-semibold text-white">Kết Nối</h3>
+                        <p class="mt-2 text-sm text-slate-400">Mạng xã hội riêng tư, xây dựng cộng đồng sinh viên HUB.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Crew Section -->
+            <div class="mt-24">
+                 <h2 class="text-3xl font-bold text-center text-white">Phi Hành Đoàn <span class="text-sky-400">HUBverse</span></h2>
+                 <p class="text-center mt-2 text-slate-400">Những "phi hành gia" đã xây dựng nên con tàu tri thức này.</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12">
+                    <!-- Crew Member 1 -->
+                    <div class="crew-member text-center group cursor-pointer" data-modal-target="letter1">
+                        <img src="https://placehold.co/300x300/1e293b/94a3b8?text=Phi+Hành+Gia+1" class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-slate-700 group-hover:border-sky-400 transition-all duration-300 transform group-hover:scale-110" alt="Crew Member 1">
+                        <h3 class="mt-4 text-lg font-semibold text-white">Nguyễn Văn A</h3>
+                        <p class="text-sm text-sky-400">Project Manager</p>
+                    </div>
+                    <!-- Crew Member 2 -->
+                     <div class="crew-member text-center group cursor-pointer" data-modal-target="letter2">
+                        <img src="https://placehold.co/300x300/1e293b/94a3b8?text=Phi+Hành+Gia+2" class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-slate-700 group-hover:border-sky-400 transition-all duration-300 transform group-hover:scale-110" alt="Crew Member 2">
+                        <h3 class="mt-4 text-lg font-semibold text-white">Trần Thị B</h3>
+                        <p class="text-sm text-sky-400">Lead Developer</p>
+                    </div>
+                    <!-- Crew Member 3 -->
+                     <div class="crew-member text-center group cursor-pointer" data-modal-target="letter3">
+                        <img src="https://placehold.co/300x300/1e293b/94a3b8?text=Phi+Hành+Gia+3" class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-slate-700 group-hover:border-sky-400 transition-all duration-300 transform group-hover:scale-110" alt="Crew Member 3">
+                        <h3 class="mt-4 text-lg font-semibold text-white">Lê Văn C</h3>
+                        <p class="text-sm text-sky-400">UI/UX Designer</p>
+                    </div>
+                    <!-- Crew Member 4 -->
+                    <div class="crew-member text-center group cursor-pointer" data-modal-target="letter4">
+                        <img src="https://placehold.co/300x300/1e293b/94a3b8?text=Phi+Hành+Gia+4" class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-slate-700 group-hover:border-sky-400 transition-all duration-300 transform group-hover:scale-110" alt="Crew Member 4">
+                        <h3 class="mt-4 text-lg font-semibold text-white">Phạm Thị D</h3>
+                        <p class="text-sm text-sky-400">Marketing Lead</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration CTA Section -->
+            <div class="mt-24 text-center border-t border-slate-800 pt-16">
+                <h2 class="text-3xl font-bold text-white">Sẵn sàng khám phá vũ trụ tri thức?</h2>
+                <p class="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">Tạo tài khoản ngay để mở khóa toàn bộ tính năng, kết nối bạn bè và không bỏ lỡ bất kỳ thông tin quan trọng nào từ HUBverse.</p>
+                <button id="open-register-modal" class="mt-8 px-8 py-3 bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-600 transition-all transform hover:scale-105">Tạo Tài Khoản Miễn Phí</button>
+            </div>
+        </section>
+
+        <!-- Section: Pass Tai Lieu (Market) -->
+        <section id="market" class="page-content hidden">
+            <h2 class="text-3xl font-bold text-white mb-8">Pass Tài Liệu (Chợ Sinh Viên)</h2>
+            <div class="flex flex-wrap gap-4 mb-8" id="product-filters">
+                <button data-category="all" class="filter-btn bg-sky-500 text-white px-4 py-2 rounded-lg">Tất cả</button>
+                <button data-category="book" class="filter-btn bg-slate-700 text-slate-300 px-4 py-2 rounded-lg hover:bg-slate-600">Sách & Giáo trình</button>
+                <button data-category="tool" class="filter-btn bg-slate-700 text-slate-300 px-4 py-2 rounded-lg hover:bg-slate-600">Dụng cụ học tập</button>
+                <button data-category="other" class="filter-btn bg-slate-700 text-slate-300 px-4 py-2 rounded-lg hover:bg-slate-600">Khác</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Product Items -->
+                <div class="card rounded-lg overflow-hidden product-item" data-category="book">
+                    <img src="https://placehold.co/400x300/0c1427/e0e0e0?text=Kinh+tế+học" alt="Kinh tế học" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white">Giáo trình Kinh tế học</h3>
+                        <p class="text-sm text-slate-400 mt-1">Sách & Giáo trình</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-xl font-bold text-sky-400">120.000₫</span>
+                            <button class="text-xs font-semibold bg-sky-500 text-white px-3 py-1 rounded-full hover:bg-sky-600">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded-lg overflow-hidden product-item" data-category="tool">
+                    <img src="https://placehold.co/400x300/0c1427/e0e0e0?text=Máy+tính+Casio" alt="Máy tính Casio" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white">Máy tính Casio FX-580VN X</h3>
+                        <p class="text-sm text-slate-400 mt-1">Dụng cụ học tập</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-xl font-bold text-sky-400">550.000₫</span>
+                            <button class="text-xs font-semibold bg-sky-500 text-white px-3 py-1 rounded-full hover:bg-sky-600">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card rounded-lg overflow-hidden product-item" data-category="book">
+                    <img src="https://placehold.co/400x300/0c1427/e0e0e0?text=Triết+học+Mác-Lênin" alt="Triết học Mác-Lênin" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white">Giáo trình Triết học Mác-Lênin</h3>
+                        <p class="text-sm text-slate-400 mt-1">Sách & Giáo trình</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-xl font-bold text-sky-400">85.000₫</span>
+                            <button class="text-xs font-semibold bg-sky-500 text-white px-3 py-1 rounded-full hover:bg-sky-600">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card rounded-lg overflow-hidden product-item" data-category="other">
+                    <img src="https://placehold.co/400x300/0c1427/e0e0e0?text=Vé+Concert" alt="Vé Concert" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white">Vé concert Westlife</h3>
+                        <p class="text-sm text-slate-400 mt-1">Khác</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-xl font-bold text-sky-400">1.500.000₫</span>
+                            <button class="text-xs font-semibold bg-sky-500 text-white px-3 py-1 rounded-full hover:bg-sky-600">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Digital Library -->
+        <section id="library" class="page-content hidden">
+            <h2 class="text-3xl font-bold text-white mb-8">Thư Viện Số</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 <!-- Department Card -->
+                <div class="card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-sky-400">Tài chính - Ngân hàng</h3>
+                    <ul class="mt-4 space-y-2 text-slate-300">
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Bài giảng & Slide</li>
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Đề cương ôn tập</li>
+                        <li class="flex items-center"><i data-lucide="book-open" class="h-4 w-4 mr-2 text-sky-500"></i> Ebook & Giáo trình</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-sky-400">Kế toán - Kiểm toán</h3>
+                    <ul class="mt-4 space-y-2 text-slate-300">
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Nguyên lý kế toán</li>
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Đề thi các năm</li>
+                        <li class="flex items-center"><i data-lucide="users-2" class="h-4 w-4 mr-2 text-sky-500"></i> Bài tập nhóm mẫu</li>
+                    </ul>
+                </div>
+                 <div class="card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-sky-400">Quản trị Kinh doanh</h3>
+                    <ul class="mt-4 space-y-2 text-slate-300">
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Slide Quản trị học</li>
+                        <li class="flex items-center"><i data-lucide="file-text" class="h-4 w-4 mr-2 text-sky-500"></i> Case study thực tế</li>
+                        <li class="flex items-center"><i data-lucide="book-open" class="h-4 w-4 mr-2 text-sky-500"></i> Tài liệu tham khảo</li>
+                    </ul>
+                </div>
+                <!-- Add more departments as needed -->
+            </div>
+        </section>
+
+        <!-- Section: News & Events -->
+        <section id="news" class="page-content hidden">
+             <h2 class="text-3xl font-bold text-white mb-8">Tin Tức & Sự Kiện</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- News Column 1 -->
+                <div>
+                    <h3 class="text-2xl font-semibold text-sky-400 mb-4 border-b-2 border-sky-800 pb-2">Sự Kiện Sắp Tới</h3>
+                    <div class="space-y-6">
+                         <!-- Event Item -->
+                        <div class="card p-4 flex space-x-4 rounded-lg">
+                            <div class="flex-shrink-0 text-center bg-slate-700 rounded-md p-2 w-16">
+                                <p class="text-sm font-bold text-white">Thg 7</p>
+                                <p class="text-2xl font-bold text-sky-400">25</p>
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-rose-400 uppercase">Workshop</span>
+                                <h4 class="font-bold text-white">Kỹ năng chinh phục nhà tuyển dụng</h4>
+                                <p class="text-sm text-slate-400">Hội trường lớn - 8:00 AM</p>
+                            </div>
+                        </div>
+                         <!-- Event Item -->
+                        <div class="card p-4 flex space-x-4 rounded-lg">
+                            <div class="flex-shrink-0 text-center bg-slate-700 rounded-md p-2 w-16">
+                                <p class="text-sm font-bold text-white">Thg 8</p>
+                                <p class="text-2xl font-bold text-sky-400">10</p>
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-amber-400 uppercase">Ngày hội việc làm</span>
+                                <h4 class="font-bold text-white">HUB Career Fair 2024</h4>
+                                <p class="text-sm text-slate-400">Sân trường - Cả ngày</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- News Column 2 -->
+                <div>
+                    <h3 class="text-2xl font-semibold text-sky-400 mb-4 border-b-2 border-sky-800 pb-2">Hoạt Động & Cuộc Thi</h3>
+                     <div class="space-y-6">
+                         <!-- Activity Item -->
+                        <div class="card p-4 rounded-lg">
+                            <span class="text-xs font-semibold text-green-400 uppercase">Tình nguyện</span>
+                            <h4 class="font-bold text-white mt-1">Tuyển quân Mùa Hè Xanh 2024</h4>
+                            <p class="text-sm text-slate-400 mt-1">Đăng ký tại văn phòng Đoàn trường trước ngày 30/06.</p>
+                        </div>
+                         <!-- Activity Item -->
+                        <div class="card p-4 rounded-lg">
+                            <span class="text-xs font-semibold text-indigo-400 uppercase">Học thuật</span>
+                            <h4 class="font-bold text-white mt-1">Phát động cuộc thi "Shark Tank HUB"</h4>
+                            <p class="text-sm text-slate-400 mt-1">Cơ hội cho những ý tưởng khởi nghiệp tỏa sáng. Vòng sơ loại bắt đầu!</p>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- Section: AI Chat -->
+        <section id="ai-chat" class="page-content hidden">
+            <h2 class="text-3xl font-bold text-white mb-2 text-center">AI Chat - Trợ lý học tập</h2>
+            <p class="text-center text-slate-400 mb-8">Giải đáp mọi thắc mắc của bạn về HUB</p>
+            
+            <div class="card max-w-2xl mx-auto rounded-lg p-1">
+                 <div class="p-4 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-center text-sm rounded-t-lg">
+                    Bạn chưa đăng nhập. Bạn còn <span class="font-bold">3</span> lượt hỏi thử nghiệm. <a href="#" class="font-bold underline">Đăng nhập</a> để sử dụng không giới hạn.
+                 </div>
+                <div class="p-6 h-[50vh] overflow-y-auto flex flex-col space-y-4">
+                    <!-- Chat messages -->
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-sky-500 p-2 rounded-full flex-shrink-0"><i data-lucide="bot" class="w-5 h-5 text-white"></i></div>
+                        <div class="bg-slate-700 p-3 rounded-lg rounded-tl-none">
+                            <p>Xin chào! Tôi là trợ lý AI của HUBverse. Tôi có thể giúp gì cho bạn?</p>
+                        </div>
+                    </div>
+                     <div class="flex items-start space-x-3 justify-end">
+                        <div class="bg-slate-600 p-3 rounded-lg rounded-tr-none">
+                            <p>Thủ tục xin bảng điểm gồm những gì ạ?</p>
+                        </div>
+                        <div class="bg-indigo-500 p-2 rounded-full flex-shrink-0"><i data-lucide="user" class="w-5 h-5 text-white"></i></div>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-slate-700">
+                    <div class="flex items-center bg-slate-700 rounded-lg">
+                        <input type="text" placeholder="Nhập câu hỏi của bạn..." class="w-full bg-transparent p-3 focus:outline-none text-white">
+                        <button class="p-3 text-sky-400 hover:text-sky-300"><i data-lucide="send" class="w-6 h-6"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Social Network -->
+        <section id="social" class="page-content hidden">
+            <!-- Guest View -->
+            <div id="social-guest-view" class="text-center card max-w-lg mx-auto p-12 rounded-xl">
+                 <i data-lucide="lock" class="mx-auto h-16 w-16 text-sky-400"></i>
+                 <h2 class="text-2xl font-bold mt-4 text-white">Đây là không gian riêng tư</h2>
+                 <p class="text-slate-400 mt-2">Vui lòng đăng nhập hoặc đăng ký để tham gia cộng đồng sinh viên HUB và kết nối với bạn bè.</p>
+                 <div class="mt-6 flex justify-center space-x-4">
+                     <button class="px-6 py-2 bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-600">Đăng Nhập</button>
+                     <button class="px-6 py-2 bg-slate-600 text-white font-semibold rounded-lg hover:bg-slate-500">Đăng Ký</button>
+                 </div>
+                 <p class="text-xs text-slate-500 mt-6">Bạn có thể dùng tài khoản demo để trải nghiệm:<br>
+                 <span class="font-mono">nganana23@gmail.com</span> | Mật khẩu: <span class="font-mono">12345678</span>
+                 </p>
+            </div>
+
+            <!-- Member View (hidden by default, shown after login) -->
+            <div id="social-member-view" class="hidden">
+                <div class="grid grid-cols-12 gap-6">
+                    <!-- Left Sidebar: Friends & Chats -->
+                    <div class="col-span-12 lg:col-span-3">
+                        <div class="card p-4 rounded-lg">
+                            <h3 class="font-semibold text-white mb-4">Tin nhắn</h3>
+                            <div class="space-y-3">
+                                <!-- Chat item -->
+                                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-700/50">
+                                    <img src="https://placehold.co/40x40/64748b/ffffff?text=B" class="w-10 h-10 rounded-full">
+                                    <div>
+                                        <p class="font-semibold text-sm text-white">Minh Tuấn</p>
+                                        <p class="text-xs text-slate-400">Ok, hẹn gặp cậu ở thư viện nhé!</p>
+                                    </div>
+                                </a>
+                                <!-- Chat item -->
+                                <a href="#" class="flex items-center space-x-3 p-2 rounded-lg bg-sky-500/10">
+                                    <img src="https://placehold.co/40x40/64748b/ffffff?text=C" class="w-10 h-10 rounded-full">
+                                    <div>
+                                        <p class="font-semibold text-sm text-white">Nhóm Dự án QTKD</p>
+                                        <p class="text-xs text-sky-400">Bạn có 2 tin nhắn mới</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Center: Feed -->
+                    <div class="col-span-12 lg:col-span-6 space-y-6">
+                        <!-- Create Post -->
+                        <div class="card p-4 rounded-lg">
+                             <div class="flex items-center space-x-3">
+                                <img src="https://placehold.co/40x40/475569/ffffff?text=A" class="w-10 h-10 rounded-full">
+                                <input type="text" placeholder="Bạn đang nghĩ gì, An?" class="w-full bg-slate-700/50 border border-slate-600 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                             </div>
+                        </div>
+                        <!-- Post -->
+                        <div class="card rounded-lg overflow-hidden">
+                            <div class="p-4 flex items-center space-x-3">
+                                <img src="https://placehold.co/40x40/64748b/ffffff?text=L" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <p class="font-semibold text-white">Thuỳ Linh</p>
+                                    <p class="text-xs text-slate-400">2 giờ trước</p>
+                                </div>
+                            </div>
+                            <p class="px-4 pb-4 text-slate-300">Cuối cùng cũng xong bài tiểu luận. Đuối thực sự 😴</p>
+                             <img src="https://placehold.co/600x400/0c1427/e0e0e0?text=Done!" class="w-full object-cover">
+                             <div class="p-4 flex justify-between text-slate-400">
+                                 <button class="flex items-center space-x-2 hover:text-sky-400"><i data-lucide="thumbs-up" class="w-5 h-5"></i><span>Thích</span></button>
+                                 <button class="flex items-center space-x-2 hover:text-sky-400"><i data-lucide="message-square" class="w-5 h-5"></i><span>Bình luận</span></button>
+                                 <button class="flex items-center space-x-2 hover:text-sky-400"><i data-lucide="share-2" class="w-5 h-5"></i><span>Chia sẻ</span></button>
+                             </div>
+                        </div>
+                    </div>
+                    <!-- Right Sidebar -->
+                    <div class="hidden lg:block col-span-3">
+                         <div class="card p-4 rounded-lg">
+                            <h3 class="font-semibold text-white mb-4">Gợi ý cho bạn</h3>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals for Crew Letters -->
+    <div id="letter1" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="letter-content relative w-full max-w-md p-8 rounded-lg shadow-2xl text-white">
+            <button class="modal-close absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
+            <h3 class="text-2xl font-bold text-sky-300">Từ Nguyễn Văn A</h3>
+            <p class="mt-4 text-slate-300">"Chào mừng bạn đến với HUBverse! Với vai trò quản lý, tôi và đội ngũ đã dồn hết tâm huyết để tạo ra một không gian số hữu ích nhất. Hy vọng bạn sẽ có những trải nghiệm tuyệt vời."</p>
+        </div>
+    </div>
+     <div id="letter2" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="letter-content relative w-full max-w-md p-8 rounded-lg shadow-2xl text-white">
+            <button class="modal-close absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
+            <h3 class="text-2xl font-bold text-sky-300">Từ Trần Thị B</h3>
+            <p class="mt-4 text-slate-300">"Mỗi dòng code của HUBverse đều chứa đựng mong muốn mang lại sự tiện lợi cho các bạn sinh viên. Hãy khám phá và tận hưởng thành quả công nghệ này nhé!"</p>
+        </div>
+    </div>
+    <!-- Add more modals (letter3, letter4) similarly -->
+    
+    <!-- Registration Modal -->
+    <div id="register-modal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="letter-content relative w-full max-w-lg p-8 rounded-lg shadow-2xl text-white">
+            <button class="modal-close absolute top-4 right-4 text-slate-400 hover:text-white">&times;</button>
+            <h3 class="text-2xl font-bold text-sky-300 mb-6 text-center">Đăng Ký Tài Khoản HUBverse</h3>
+            <form id="registration-form" class="space-y-4">
+                <div>
+                    <label for="fullname" class="block text-sm font-medium text-slate-300">Họ và Tên</label>
+                    <input type="text" id="fullname" name="fullname" class="mt-1 block w-full bg-slate-800/50 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-slate-300">Email Sinh Viên (.edu.vn)</label>
+                    <input type="email" id="email" name="email" class="mt-1 block w-full bg-slate-800/50 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" required pattern=".+@.*\.edu\.vn">
+                     <p class="mt-1 text-xs text-slate-500">Vui lòng sử dụng email do trường cấp.</p>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-slate-300">Mật khẩu</label>
+                    <input type="password" id="password" name="password" class="mt-1 block w-full bg-slate-800/50 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" required>
+                </div>
+                 <div>
+                    <label for="confirm-password" class="block text-sm font-medium text-slate-300">Xác nhận mật khẩu</label>
+                    <input type="password" id="confirm-password" name="confirm-password" class="mt-1 block w-full bg-slate-800/50 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" required>
+                </div>
+                <div class="pt-4">
+                     <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-4 rounded-lg transition-colors">
+                        Tạo Tài Khoản
+                    </button>
+                </div>
+                <p id="form-message" class="text-center text-sm h-4"></p>
+            </form>
+        </div>
+    </div>
+
+
+    <footer class="border-t border-slate-800 mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-slate-400">
+            <p>&copy; 2024 HUBverse. Một sản phẩm của sinh viên vì sinh viên HUB.</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        lucide.createIcons();
+
+        // --- Starfield Animation ---
+        const canvas = document.querySelector('.hero-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+            let mouse = { x: null, y: null };
+            
+            const setCanvasSize = () => {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            };
+
+            const initStars = () => {
+                stars = [];
+                // Increase star count for a denser starfield
+                const starCount = (canvas.width * canvas.height) / 2000; 
+                for (let i = 0; i < starCount; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 1.5 + 0.5, // Slightly larger stars
+                        vx: (Math.random() - 0.5) / 4,
+                        vy: (Math.random() - 0.5) / 4,
+                        opacity: Math.random() * 0.5 + 0.3,
+                        twinkleSpeed: (Math.random() - 0.5) * 0.015
+                    });
+                }
+            };
+
+            const animate = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(star => {
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    
+                    // Twinkle effect
+                    star.opacity += star.twinkleSpeed;
+                    if (star.opacity > 1 || star.opacity < 0.3) {
+                        star.twinkleSpeed = -star.twinkleSpeed;
+                    }
+                    ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                    ctx.fill();
+
+                    star.x += star.vx;
+                    star.y += star.vy;
+                    
+                    if (star.x < 0 || star.x > canvas.width) star.vx = -star.vx;
+                    if (star.y < 0 || star.y > canvas.height) star.vy = -star.vy;
+
+                    // Mouse interaction
+                    if (mouse.x !== null) {
+                        const dx = mouse.x - star.x;
+                        const dy = mouse.y - star.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 150) {
+                           star.x -= dx / (distance / 2);
+                           star.y -= dy / (distance / 2);
+                        }
+                    }
+                });
+                requestAnimationFrame(animate);
+            };
+
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - rect.left;
+                mouse.y = e.clientY - rect.top;
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+            
+            window.addEventListener('resize', () => {
+                setCanvasSize();
+                initStars();
+            });
+
+            setCanvasSize();
+            initStars();
+            animate();
+        }
+
+        // --- SPA Navigation ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const allNavLinks = [...navLinks, ...mobileMenu.querySelectorAll('.nav-link')];
+        const pageContents = document.querySelectorAll('.page-content');
+
+        allNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('data-target');
+
+                pageContents.forEach(page => page.classList.add('hidden'));
+                const targetPage = document.getElementById(targetId);
+                if (targetPage) {
+                    targetPage.classList.remove('hidden');
+                }
+
+                document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+                document.querySelectorAll(`.nav-link[data-target="${targetId}"]`).forEach(nav => nav.classList.add('active'));
+                
+                if (!mobileMenu.classList.contains('hidden')) {
+                   mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+        
+        // --- Mobile Menu Toggle ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- Modal Logic ---
+        const setupModal = (modalId, openTriggerSelector) => {
+            const modal = document.getElementById(modalId);
+            const openTriggers = document.querySelectorAll(openTriggerSelector);
+
+            if (!modal) return;
+            
+            openTriggers.forEach(trigger => {
+                 trigger.addEventListener('click', () => {
+                    const targetModalId = trigger.getAttribute('data-modal-target') || modalId;
+                    const targetModal = document.getElementById(targetModalId);
+                    if(targetModal) {
+                       targetModal.classList.remove('hidden');
+                       targetModal.classList.add('flex');
+                    }
+                });
+            });
+
+            modal.querySelectorAll('.modal-close, .modal-backdrop').forEach(el => {
+                el.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                });
+            });
+        };
+
+        // --- Setup All Modals ---
+        setupModal('letter1', '.crew-member[data-modal-target="letter1"]');
+        setupModal('letter2', '.crew-member[data-modal-target="letter2"]');
+        // Add other crew modals here if needed
+        setupModal('register-modal', '#open-register-modal');
+        
+        // Close any modal with the generic class
+        document.querySelectorAll('.modal .modal-close, .modal .modal-backdrop').forEach(el => {
+            el.addEventListener('click', () => {
+                el.closest('.modal').classList.add('hidden');
+                el.closest('.modal').classList.remove('flex');
+            });
+        });
+        
+        // --- Registration Form Logic ---
+        const registrationForm = document.getElementById('registration-form');
+        if(registrationForm) {
+            registrationForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                const messageEl = document.getElementById('form-message');
+                
+                messageEl.textContent = ''; // Clear previous message
+
+                if (password !== confirmPassword) {
+                    messageEl.textContent = 'Mật khẩu xác nhận không khớp. Vui lòng thử lại.';
+                    messageEl.className = 'text-center text-sm h-4 text-red-400';
+                } else {
+                    messageEl.textContent = 'Đăng ký thành công! (Chức năng Demo)';
+                    messageEl.className = 'text-center text-sm h-4 text-green-400';
+                    registrationForm.reset();
+                    // Close modal after a delay
+                    setTimeout(() => {
+                        const registerModal = document.getElementById('register-modal');
+                        registerModal.classList.add('hidden');
+                        registerModal.classList.remove('flex');
+                        messageEl.textContent = ''; 
+                    }, 2000);
+                }
+            });
+        }
+
+
+        // --- Product Filter Logic ---
+        const filterButtons = document.querySelectorAll('#product-filters .filter-btn');
+        const productItems = document.querySelectorAll('.product-item');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const category = button.getAttribute('data-category');
+
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('bg-sky-500', 'text-white');
+                    btn.classList.add('bg-slate-700', 'text-slate-300');
+                });
+                button.classList.add('bg-sky-500', 'text-white');
+                button.classList.remove('bg-slate-700', 'text-slate-300');
+
+                productItems.forEach(item => {
+                    item.style.display = 'none'; // Hide all first
+                    if (category === 'all' || item.getAttribute('data-category') === category) {
+                        item.style.display = 'block'; // Then show matching
+                    }
+                });
+            });
+        });
+    });
+    </script>
+</body>
+</html>
